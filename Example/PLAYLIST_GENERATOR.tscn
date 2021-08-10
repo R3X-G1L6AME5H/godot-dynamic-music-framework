@@ -1,0 +1,177 @@
+[gd_scene load_steps=12 format=2]
+
+[ext_resource path="res://addons/DMF/scripts/SONG.gd" type="Script" id=1]
+[ext_resource path="res://addons/DMF/scripts/PLAYLIST.gd" type="Script" id=2]
+[ext_resource path="res://addons/DMF/scripts/DataNodes/WATCHDOG.gd" type="Script" id=3]
+[ext_resource path="res://addons/DMF/scripts/DataNodes/SEGMENT.gd" type="Script" id=4]
+[ext_resource path="res://addons/DMF/scripts/DataNodes/TRACK.gd" type="Script" id=5]
+[ext_resource path="res://addons/DMF/scripts/DataNodes/MIDI.gd" type="Script" id=6]
+[ext_resource path="res://addons/DMF/scripts/DataNodes/ONESHOT.gd" type="Script" id=7]
+
+[sub_resource type="Curve" id=1]
+min_value = -33.0
+max_value = 0.0
+_data = [ Vector2( 0.20339, 0 ), 0.0, -1.68573, 0, 0, Vector2( 0.440678, -33 ), -327.45, 0.0, 0, 0 ]
+
+[sub_resource type="Curve" id=2]
+min_value = -33.0
+max_value = 0.0
+_data = [ Vector2( 0.292373, 0 ), 0.0, -1.68573, 0, 0, Vector2( 0.597458, -33 ), -296.332, 0.0, 0, 0 ]
+
+[sub_resource type="Curve" id=3]
+min_value = -33.0
+max_value = 0.0
+_data = [ Vector2( 0.351695, -33 ), -327.45, 230.1, 0, 0, Vector2( 0.737288, 0 ), 0.0, -1.68573, 0, 0 ]
+
+[sub_resource type="Curve" id=4]
+min_value = -33.0
+max_value = 0.0
+_data = [ Vector2( 0.220339, -10.2 ), -327.45, -3.21818, 0, 0, Vector2( 0.504237, 0 ), 0.0, -1.68573, 0, 0 ]
+
+[node name="SONG_LIBRARY" type="Node"]
+script = ExtResource( 2 )
+
+[node name="SONG" type="Node" parent="."]
+script = ExtResource( 1 )
+
+[node name="MT_HIGH_HP_MIDI" type="Node" parent="SONG"]
+script = ExtResource( 6 )
+midi_file = "res://Assets/FINAL/MIDIS/HighHP.mid"
+ending_bar = 16
+single_value_trigger = false
+trigger_min = 0.32
+trigger_max = 1.0
+property_current = "HP"
+property_max = "HP_MAX"
+pitch_correction = false
+
+[node name="MT_LOW_HP_MIDI" type="Node" parent="SONG"]
+script = ExtResource( 6 )
+midi_file = "res://Assets/FINAL/MIDIS/LowHP.mid"
+ending_bar = 16
+single_value_trigger = false
+trigger_min = 0.0
+trigger_max = 0.32
+property_current = "HP"
+property_max = "HP_MAX"
+pitch_correction = false
+
+[node name="MT_PITCH" type="Node" parent="SONG"]
+script = ExtResource( 6 )
+midi_file = "res://Assets/FINAL/MIDIS/Pitch.mid"
+ending_bar = 16
+single_value_trigger = false
+trigger_min = 0.0
+trigger_max = 1.0
+pitch_correction = true
+pitch_bus = "PitchShifter"
+pitch_effect_id = 0
+
+[node name="TR_Violins 1" type="Node" parent="SONG"]
+script = ExtResource( 5 )
+music_track = "res://Assets/FINAL/TRACK_!/1_Violin 1.ogg"
+end_bar = 16
+
+[node name="TR_Violins 2" type="Node" parent="SONG"]
+script = ExtResource( 5 )
+music_track = "res://Assets/FINAL/TRACK_!/2_Violin 2.ogg"
+start_bar = 2
+end_bar = 16
+
+[node name="TR_Violas" type="Node" parent="SONG"]
+script = ExtResource( 5 )
+music_track = "res://Assets/FINAL/TRACK_!/3_Viola.ogg"
+end_bar = 16
+
+[node name="TR_Bass" type="Node" parent="SONG"]
+script = ExtResource( 5 )
+music_track = "res://Assets/FINAL/TRACK_!/4_Bass.ogg"
+end_bar = 16
+
+[node name="SEG_Chill" type="Node" parent="SONG"]
+script = ExtResource( 4 )
+ending_bar = 8
+
+[node name="SEG_Intense" type="Node" parent="SONG"]
+script = ExtResource( 4 )
+starting_bar = 8
+ending_bar = 16
+
+[node name="WD_BASS2HP4VOL" type="Node" parent="SONG"]
+script = ExtResource( 3 )
+property_current = "HP"
+property_max = "HP_MAX"
+change_property = "VOL"
+change_graph = SubResource( 1 )
+target_track = "TR_Bass"
+
+[node name="WD_VIOLA2HP4VOL" type="Node" parent="SONG"]
+script = ExtResource( 3 )
+property_current = "HP"
+property_max = "HP_MAX"
+change_property = "VOL"
+change_graph = SubResource( 2 )
+target_track = "TR_Violas"
+
+[node name="WD_VIOLIN22HP4VOL" type="Node" parent="SONG"]
+script = ExtResource( 3 )
+property_current = "HP"
+property_max = "HP_MAX"
+change_property = "VOL"
+change_graph = SubResource( 3 )
+target_track = "TR_Violins 2"
+
+[node name="WD_VIOLIN12HP4VOL" type="Node" parent="SONG"]
+script = ExtResource( 3 )
+property_current = "HP"
+property_max = "HP_MAX"
+change_property = "VOL"
+change_graph = SubResource( 4 )
+target_track = "TR_Violins 1"
+
+[node name="OS_FLUTE_1" type="Node" parent="SONG"]
+script = ExtResource( 7 )
+oneshot_sound = "res://Assets/FINAL/TRACK_!/1_FLUTE_OS1.wav"
+start_bar = 1
+trigger_chance = 0.15
+
+[node name="OS_FLUTE_2" type="Node" parent="SONG"]
+script = ExtResource( 7 )
+oneshot_sound = "res://Assets/FINAL/TRACK_!/2_FLUTE_OS2.wav"
+start_bar = 3
+trigger_chance = 0.15
+
+[node name="OS_FLUTE_3" type="Node" parent="SONG"]
+script = ExtResource( 7 )
+oneshot_sound = "res://Assets/FINAL/TRACK_!/3_FLUTE_OS3.wav"
+start_bar = 4
+trigger_chance = 0.15
+
+[node name="OS_FLUTE_4" type="Node" parent="SONG"]
+script = ExtResource( 7 )
+oneshot_sound = "res://Assets/FINAL/TRACK_!/4_FLUTE_OS4.wav"
+start_bar = 6
+trigger_chance = 0.15
+
+[node name="OS_BASSOON_1" type="Node" parent="SONG"]
+script = ExtResource( 7 )
+oneshot_sound = "res://Assets/FINAL/TRACK_!/5_BASSOON_OS1.wav"
+trigger_chance = 0.15
+
+[node name="OS_BASSOON_2" type="Node" parent="SONG"]
+script = ExtResource( 7 )
+oneshot_sound = "res://Assets/FINAL/TRACK_!/6_BASSOON_OS2.wav"
+start_bar = 2
+trigger_chance = 0.15
+
+[node name="OS_BASSOON_3" type="Node" parent="SONG"]
+script = ExtResource( 7 )
+oneshot_sound = "res://Assets/FINAL/TRACK_!/7_BASSOON_OS3.wav"
+start_bar = 4
+trigger_chance = 0.15
+
+[node name="OS_BASSOON_4" type="Node" parent="SONG"]
+script = ExtResource( 7 )
+oneshot_sound = "res://Assets/FINAL/TRACK_!/8_BASSOON_OS4.wav"
+start_bar = 6
+trigger_chance = 0.15

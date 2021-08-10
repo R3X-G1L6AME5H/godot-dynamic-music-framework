@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://addons/DMF/singletons/MusicController.gd" type="Script" id=1]
+
+[sub_resource type="AudioStreamGenerator" id=1]
+
+[node name="MusicController" type="Node"]
+script = ExtResource( 1 )
+
+[node name="TRANSITION_CONTROL" type="Tween" parent="."]
+
+[node name="SyncPlayer" type="AudioStreamPlayer" parent="."]
+stream = SubResource( 1 )

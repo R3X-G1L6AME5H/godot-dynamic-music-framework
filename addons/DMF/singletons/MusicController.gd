@@ -1,5 +1,9 @@
 extends Node
 
+"""
+	Track and Midi Player Singleton by Nino Candrlic @R3X_G1L6AME5H
+"""
+
 export (String, FILE, "*.gd") var path_to_song_library = "res://Library.gd"
 onready var SONG_LIBRARY = load(path_to_song_library).library
 const SMF = preload("res://addons/DMF/singletons/SMF.gd")
@@ -48,6 +52,9 @@ func _ready():
 	_init_midi()
 	_init_song()
 
+"""
+Go through all tracks in this song and create players for it.
+"""
 func _init_song() -> void:
 	#### CREATE ALL PLAYERS
 	for track in SONG_LIBRARY[current_song]["tracks"].keys():
@@ -100,6 +107,9 @@ func _init_song() -> void:
 	
 	clock.play()
 
+"""
+Go through all midis in this song and create players for it.
+"""
 func _init_midi( ) -> void:
 	if SONG_LIBRARY[current_song]["midis"].empty():
 		midi_enabled = false
@@ -168,6 +178,9 @@ func _process(delta):
 	_process_oneshots(delta)
 	if midi_enabled: _process_midi()
 
+"""
+Control when to toggle players.
+"""
 func _process_tracks() -> void:
 	### TURN ON/OF PLAYERS
 	for player in current_players:
@@ -177,6 +190,10 @@ func _process_tracks() -> void:
 		elif player.end_time < position and player.playing:
 			player.playing = false
 
+"""
+Check how the stats that the watchdogs observe change, 
+and apply the change to a bus property.
+"""
 func _process_watchdogs() -> void:
 	## CHECK ON WATCHDOGS
 	for idx in range(SONG_LIBRARY[current_song].watchdogs.size()):
@@ -192,6 +209,9 @@ func _process_watchdogs() -> void:
 				"VOL":
 					AudioServer.set_bus_volume_db(bus_id, value)
 
+"""
+Roll the dice to see if an oneshot should be played.
+"""
 func _process_oneshots( delta : float ) -> void:
 	## CHECK ON ONESHOTS
 	for oneshot in current_oneshots:
@@ -200,6 +220,9 @@ func _process_oneshots( delta : float ) -> void:
 			if randf() <= oneshot.trigger_chance:
 				oneshot.play()
 
+"""
+Emit signals when notes are on/off, given that the triggers are satisfied.
+"""
 func _process_midi() -> void:
 	for stat_key in  midi_statuses.keys():
 		if midi_statuses[stat_key].start_time < position and not midi_statuses[stat_key].playing:
@@ -237,6 +260,7 @@ func _process_midi() -> void:
 			midi_statuses[stat_key].event_pointer += 1
 		
 			### CHECK IF TRIGGERS ARE SATISFIED
+			## A trigger being a range of values that makes the midi play 
 			if SONG_LIBRARY[current_song]["midis"][stat_key]["single_trigger"]:
 				if Blackboard.get(SONG_LIBRARY[current_song]["midis"][stat_key]["property"]) != SONG_LIBRARY[current_song]["midis"][stat_key]["value"]:
 					### CLEAN ALL ACTIVE NOTES
@@ -246,7 +270,7 @@ func _process_midi() -> void:
 					continue
 			
 			else:
-				# No need to check if the enitire range is selected
+				# No need to check if the enitire trigger range is selected
 				if SONG_LIBRARY[current_song]["midis"][stat_key]["floor"] != 0 or SONG_LIBRARY[current_song]["midis"][stat_key]["ceil"] != 1:
 					var trigger_value = clamp( \
 											float(Blackboard.get(SONG_LIBRARY[current_song]["midis"][stat_key]["current"])) \
@@ -291,6 +315,10 @@ func _process_midi() -> void:
 						#printt("ON", event_note_on.note )
 						emit_signal("note_on", stat_key, event_note_on)
 
+"""
+Move the marker to the the place in a song you want.
+Used for transitions, and loops.
+"""
 func seek( seek_time : float ):
 	### CLEAR THE SLATE
 	for note in notes_on.keys():
@@ -316,6 +344,9 @@ func seek( seek_time : float ):
 		else:
 			player.playing = false
 
+"""
+A special function to move the MIDI marker.
+"""
 func _midi_seek( seek_time : float, track_status_key : String ):
 	var current_position = seek_time * ((midi_statuses[track_status_key].timebase * SONG_LIBRARY[current_song].bpm) / 60.0)
 	var pointer:int = 0

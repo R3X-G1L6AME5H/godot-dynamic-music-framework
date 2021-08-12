@@ -6,29 +6,29 @@ const library = {
 		"timesig2": 4,
 		"tracks": {
 			"TR_Violins 1": {
-				"path": "res://Assets/FINAL/TRACK_!/1_Violin 1.ogg",
+				"path": "res://Example/Assets/TRACK_!/1_Violin 1.ogg",
 				"start": 0,
 				"end": 16
 			},
 			"TR_Violins 2": {
-				"path": "res://Assets/FINAL/TRACK_!/2_Violin 2.ogg",
+				"path": "res://Example/Assets/TRACK_!/2_Violin 2.ogg",
 				"start": 2,
 				"end": 16
 			},
 			"TR_Violas": {
-				"path": "res://Assets/FINAL/TRACK_!/3_Viola.ogg",
+				"path": "res://Example/Assets/TRACK_!/3_Viola.ogg",
 				"start": 0,
 				"end": 16
 			},
 			"TR_Bass": {
-				"path": "res://Assets/FINAL/TRACK_!/4_Bass.ogg",
+				"path": "res://Example/Assets/TRACK_!/4_Bass.ogg",
 				"start": 0,
 				"end": 16
 			}
 		},
 		"midis": {
 			"MT_HIGH_HP_MIDI": {
-				"midi": "res://Assets/FINAL/MIDIS/HighHP.mid",
+				"midi": "res://Example/Assets/MIDIS/HighHP.mid",
 				"start": 0,
 				"end": 16,
 				"single_trigger": false,
@@ -39,7 +39,7 @@ const library = {
 				"max": "HP_MAX"
 			},
 			"MT_LOW_HP_MIDI": {
-				"midi": "res://Assets/FINAL/MIDIS/LowHP.mid",
+				"midi": "res://Example/Assets/MIDIS/LowHP.mid",
 				"start": 0,
 				"end": 16,
 				"single_trigger": false,
@@ -50,7 +50,7 @@ const library = {
 				"max": "HP_MAX"
 			},
 			"MT_PITCH": {
-				"midi": "res://Assets/FINAL/MIDIS/Pitch.mid",
+				"midi": "res://Example/Assets/MIDIS/Pitch.mid",
 				"start": 0,
 				"end": 16,
 				"single_trigger": false,
@@ -203,42 +203,42 @@ const library = {
 		],
 		"oneshots": [
 			{
-				"path": "res://Assets/FINAL/TRACK_!/1_FLUTE_OS1.wav",
+				"path": "res://Example/Assets/TRACK_!/1_FLUTE_OS1.wav",
 				"start": 1,
 				"chance": 0.15
 			},
 			{
-				"path": "res://Assets/FINAL/TRACK_!/2_FLUTE_OS2.wav",
+				"path": "res://Example/Assets/TRACK_!/2_FLUTE_OS2.wav",
 				"start": 3,
 				"chance": 0.15
 			},
 			{
-				"path": "res://Assets/FINAL/TRACK_!/3_FLUTE_OS3.wav",
+				"path": "res://Example/Assets/TRACK_!/3_FLUTE_OS3.wav",
 				"start": 4,
 				"chance": 0.15
 			},
 			{
-				"path": "res://Assets/FINAL/TRACK_!/4_FLUTE_OS4.wav",
+				"path": "res://Example/Assets/TRACK_!/4_FLUTE_OS4.wav",
 				"start": 6,
 				"chance": 0.15
 			},
 			{
-				"path": "res://Assets/FINAL/TRACK_!/5_BASSOON_OS1.wav",
+				"path": "res://Example/Assets/TRACK_!/5_BASSOON_OS1.wav",
 				"start": 0,
 				"chance": 0.15
 			},
 			{
-				"path": "res://Assets/FINAL/TRACK_!/6_BASSOON_OS2.wav",
+				"path": "res://Example/Assets/TRACK_!/6_BASSOON_OS2.wav",
 				"start": 2,
 				"chance": 0.15
 			},
 			{
-				"path": "res://Assets/FINAL/TRACK_!/7_BASSOON_OS3.wav",
+				"path": "res://Example/Assets/TRACK_!/7_BASSOON_OS3.wav",
 				"start": 4,
 				"chance": 0.15
 			},
 			{
-				"path": "res://Assets/FINAL/TRACK_!/8_BASSOON_OS4.wav",
+				"path": "res://Example/Assets/TRACK_!/8_BASSOON_OS4.wav",
 				"start": 6,
 				"chance": 0.15
 			}

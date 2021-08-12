@@ -30,13 +30,14 @@ _data = [ Vector2( 0.220339, -10.2 ), -327.45, -3.21818, 0, 0, Vector2( 0.504237
 
 [node name="SONG_LIBRARY" type="Node"]
 script = ExtResource( 2 )
+save_as_dictionary = false
 
 [node name="SONG" type="Node" parent="."]
 script = ExtResource( 1 )
 
 [node name="MT_HIGH_HP_MIDI" type="Node" parent="SONG"]
 script = ExtResource( 6 )
-midi_file = "res://Assets/FINAL/MIDIS/HighHP.mid"
+midi_file = "res://Example/Assets/MIDIS/HighHP.mid"
 ending_bar = 16
 single_value_trigger = false
 trigger_min = 0.32
@@ -47,7 +48,7 @@ pitch_correction = false
 
 [node name="MT_LOW_HP_MIDI" type="Node" parent="SONG"]
 script = ExtResource( 6 )
-midi_file = "res://Assets/FINAL/MIDIS/LowHP.mid"
+midi_file = "res://Example/Assets/MIDIS/LowHP.mid"
 ending_bar = 16
 single_value_trigger = false
 trigger_min = 0.0
@@ -58,7 +59,7 @@ pitch_correction = false
 
 [node name="MT_PITCH" type="Node" parent="SONG"]
 script = ExtResource( 6 )
-midi_file = "res://Assets/FINAL/MIDIS/Pitch.mid"
+midi_file = "res://Example/Assets/MIDIS/Pitch.mid"
 ending_bar = 16
 single_value_trigger = false
 trigger_min = 0.0
@@ -69,23 +70,23 @@ pitch_effect_id = 0
 
 [node name="TR_Violins 1" type="Node" parent="SONG"]
 script = ExtResource( 5 )
-music_track = "res://Assets/FINAL/TRACK_!/1_Violin 1.ogg"
+music_track = "res://Example/Assets/TRACK_!/1_Violin 1.ogg"
 end_bar = 16
 
 [node name="TR_Violins 2" type="Node" parent="SONG"]
 script = ExtResource( 5 )
-music_track = "res://Assets/FINAL/TRACK_!/2_Violin 2.ogg"
+music_track = "res://Example/Assets/TRACK_!/2_Violin 2.ogg"
 start_bar = 2
 end_bar = 16
 
 [node name="TR_Violas" type="Node" parent="SONG"]
 script = ExtResource( 5 )
-music_track = "res://Assets/FINAL/TRACK_!/3_Viola.ogg"
+music_track = "res://Example/Assets/TRACK_!/3_Viola.ogg"
 end_bar = 16
 
 [node name="TR_Bass" type="Node" parent="SONG"]
 script = ExtResource( 5 )
-music_track = "res://Assets/FINAL/TRACK_!/4_Bass.ogg"
+music_track = "res://Example/Assets/TRACK_!/4_Bass.ogg"
 end_bar = 16
 
 [node name="SEG_Chill" type="Node" parent="SONG"]
@@ -131,47 +132,47 @@ target_track = "TR_Violins 1"
 
 [node name="OS_FLUTE_1" type="Node" parent="SONG"]
 script = ExtResource( 7 )
-oneshot_sound = "res://Assets/FINAL/TRACK_!/1_FLUTE_OS1.wav"
+oneshot_sound = "res://Example/Assets/TRACK_!/1_FLUTE_OS1.wav"
 start_bar = 1
 trigger_chance = 0.15
 
 [node name="OS_FLUTE_2" type="Node" parent="SONG"]
 script = ExtResource( 7 )
-oneshot_sound = "res://Assets/FINAL/TRACK_!/2_FLUTE_OS2.wav"
+oneshot_sound = "res://Example/Assets/TRACK_!/2_FLUTE_OS2.wav"
 start_bar = 3
 trigger_chance = 0.15
 
 [node name="OS_FLUTE_3" type="Node" parent="SONG"]
 script = ExtResource( 7 )
-oneshot_sound = "res://Assets/FINAL/TRACK_!/3_FLUTE_OS3.wav"
+oneshot_sound = "res://Example/Assets/TRACK_!/3_FLUTE_OS3.wav"
 start_bar = 4
 trigger_chance = 0.15
 
 [node name="OS_FLUTE_4" type="Node" parent="SONG"]
 script = ExtResource( 7 )
-oneshot_sound = "res://Assets/FINAL/TRACK_!/4_FLUTE_OS4.wav"
+oneshot_sound = "res://Example/Assets/TRACK_!/4_FLUTE_OS4.wav"
 start_bar = 6
 trigger_chance = 0.15
 
 [node name="OS_BASSOON_1" type="Node" parent="SONG"]
 script = ExtResource( 7 )
-oneshot_sound = "res://Assets/FINAL/TRACK_!/5_BASSOON_OS1.wav"
+oneshot_sound = "res://Example/Assets/TRACK_!/5_BASSOON_OS1.wav"
 trigger_chance = 0.15
 
 [node name="OS_BASSOON_2" type="Node" parent="SONG"]
 script = ExtResource( 7 )
-oneshot_sound = "res://Assets/FINAL/TRACK_!/6_BASSOON_OS2.wav"
+oneshot_sound = "res://Example/Assets/TRACK_!/6_BASSOON_OS2.wav"
 start_bar = 2
 trigger_chance = 0.15
 
 [node name="OS_BASSOON_3" type="Node" parent="SONG"]
 script = ExtResource( 7 )
-oneshot_sound = "res://Assets/FINAL/TRACK_!/7_BASSOON_OS3.wav"
+oneshot_sound = "res://Example/Assets/TRACK_!/7_BASSOON_OS3.wav"
 start_bar = 4
 trigger_chance = 0.15
 
 [node name="OS_BASSOON_4" type="Node" parent="SONG"]
 script = ExtResource( 7 )
-oneshot_sound = "res://Assets/FINAL/TRACK_!/8_BASSOON_OS4.wav"
+oneshot_sound = "res://Example/Assets/TRACK_!/8_BASSOON_OS4.wav"
 start_bar = 6
 trigger_chance = 0.15

@@ -1,7 +1,8 @@
 extends Node
 
-#const SONG_LIBRARY = preload("res://lib.gd").library
-#const SMF = preload("res://FINAL/SMF.gd")
+export (String, FILE, "*.gd") var path_to_song_library = "res://Library.gd"
+onready var SONG_LIBRARY = load(path_to_song_library).library
+const SMF = preload("res://addons/DMF/singletons/SMF.gd")
 
 onready var clock = $SyncPlayer
 var position : float = 0

@@ -94,7 +94,7 @@ func _on_Enemy_current_note_changed(note):
 ############################################################################################
 ############################################################################################
 ############################################################################################
-const BULLET = preload("res://MIDI_PLAYER/Bullet.tscn")
+const BULLET = preload("res://Example/Scenes/Bullet.tscn")
 
 func _process(_delta):
 	for child in get_parent().get_node("Bullets").get_children():

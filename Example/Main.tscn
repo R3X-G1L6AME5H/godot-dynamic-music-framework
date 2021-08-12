@@ -246,5 +246,6 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[connection signal="current_note_changed" from="Enemy" to="Enemy" method="_on_Enemy_current_note_changed"]
 [connection signal="timeout" from="Enemy/Timer" to="Enemy" method="_on_Timer_timeout"]
 [connection signal="area_entered" from="OOB" to="Enemy" method="_on_OOB_area_entered"]

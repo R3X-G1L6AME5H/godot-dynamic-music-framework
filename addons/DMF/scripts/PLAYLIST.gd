@@ -12,7 +12,10 @@ enum LIBRARY_NODE_TYPES {
 }
 
 export (bool) var toggle = false setget _save_library
-export (bool) var save_as_dictionary = false
+
+## TODO: Handle opening a binary file in MusicController
+#export (bool) 
+var save_as_dictionary = false
 
 var library = {}
 

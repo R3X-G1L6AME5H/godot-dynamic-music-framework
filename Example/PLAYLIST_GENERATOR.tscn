@@ -30,7 +30,6 @@ _data = [ Vector2( 0.220339, -10.2 ), -327.45, -3.21818, 0, 0, Vector2( 0.504237
 
 [node name="SONG_LIBRARY" type="Node"]
 script = ExtResource( 2 )
-save_as_dictionary = false
 
 [node name="SONG" type="Node" parent="."]
 script = ExtResource( 1 )

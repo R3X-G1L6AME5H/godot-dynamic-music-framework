@@ -12,7 +12,21 @@ The `MusicController` is the thing that plays all the sounds. It will read the `
 ### PlaylistGenerator
 PlaylistGenerator is made up of many smaller nodes which simplify the organization of all the files, and settings. At the top of all the nodes is the `DMFPlaylistGenerator` node aka. the Generator. If you select it, you will see that this node has a singular property: toggle. When pressed, it will generate `res://Library.gd` file. Second is the `DMFSong` node. This node defines all the songs available to the `MusicController`. Here you will define the song's BPM and its Time Signature. 
 
-Lastly, there come the nodes you'll spend most of your time with. First lets talk about the `DMFTrack` node. It's job is to play a sound file. 
+#### Tracks
+Lastly, there come the nodes you'll spend most of your time with. First lets talk about the `DMFTrack` node. It's job is to play a sound file; simple as. 
+
+#### Segments
+Next up is the `DMFSegment` node. One thing you should familiarize yourself with is the concept of bars. Bars are a certain time frame of music. It is calculated using the BPM, and the Time Signature specified in `DMFSong` node. Otherwise, it is very easy to use. Specify FROM which TO which bar a segment will span. )Insert example( Later on, you will be able to switch from one segment to the next, making your game music more dynamic. 
+
+#### Oneshots
+Speaking of dynamic, I introduce you to `DMFOneshot` node. Oneshots have a certain chance of playing any time the song loops back to them. This can add spice to your music. What I call "Oneshots" is what Mick Gordon used on his Doom OST. Making a few riffs which would play randomly throught the song. 
+
+#### Watchdogs
+`DMFWatchdog` is where things get crazy. The jist of is: you select a track, one of ITS properties, one of the WORLD's properties, WORLD property's max value, and a graph of how it should respond. Imagine it this way: The game starts and you have this piano track playing. The player gets hit, and the health drops bellow 50%. Along with it, the piano gets quieter, and a violin fades in. How? Watchdogs. You start with two tracks: the piano and the violin. Then you make two watchdogs. You make one watchdog target the piano track, and the other one target the violin track. You tell them their `Current Property` is "PlayerHP", and that the `Property Max` is "PlayerHPMax"(both of which must be available in the Blackboard), and to `Change Property` Volume. Lastly, you create the new curves for the `Change Graph`. One whose value is high above 50%, and one whose value is high BELOW 50%. That is how you get the example above. 
+
+#### Midi's
+And then there is the `DMFMidi` node. This node is intended to syncronize the music and the bahaviour in game. Up until this point, the music reacted to the player, but here on out the player reacts to the music. Any game which has a rhythm element to it can benefit from this node. The idea is to use your favourite DAW to create a midi file in line with the music being played, each note coresponding to a certain behaviour. Say, in a guitar hero like game, you could map the RED button to note C2, BLUE button to note D2, and the YELLOW button to note E2. The `MusicController` will process this midi file alongside the track file, and emit signals when a note is on, and when its off. Since the `MusicController` is a singleton, you can connect any object to it by simply writing `MusicController.connect("note_on", self, "_on_Node_note_on")`, and `MusicController.connect("note_off", self, "_on_Node_note_off")`(This assumes that you know how connecting signals works). There is no end to what you can do with this functionality.
+
 
 ```
 Generator

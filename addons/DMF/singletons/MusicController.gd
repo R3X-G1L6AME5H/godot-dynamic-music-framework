@@ -4,9 +4,9 @@ extends Node
 	Track and Midi Player Singleton by Nino Candrlic @R3X_G1L6AME5H
 """
 
-export (String, FILE, "*.gd") var path_to_song_library = "res://Library.gd"
-onready var SONG_LIBRARY = load(path_to_song_library).library
 const SMF = preload("res://addons/DMF/singletons/SMF.gd")
+export (String, FILE, "*.tres") var path_to_song_library = "res://Library.tres"
+var SONG_LIBRARY : Dictionary
 
 onready var clock = $SyncPlayer
 var position : float = 0
@@ -48,6 +48,12 @@ class GodotMIDIPlayerTrackStatus:
 
 #####################################################################################
 func _ready():
+	var file = File.new()
+	file.open(path_to_song_library, File.READ)
+	SONG_LIBRARY = file.get_var()
+	file.close()
+	
+	print(JSON.print(SONG_LIBRARY, "\t"))
 	bar_length = (60.0 / float(SONG_LIBRARY[current_song].bpm)) * (4.0/float(SONG_LIBRARY[current_song].timesig2)) * float(SONG_LIBRARY[current_song].timesig1)
 	_init_midi()
 	_init_song()

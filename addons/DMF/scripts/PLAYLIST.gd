@@ -12,10 +12,7 @@ enum LIBRARY_NODE_TYPES {
 }
 
 export (bool) var toggle = false setget _save_library
-
-## TODO: Handle opening a binary file in MusicController
-#export (bool) 
-var save_as_dictionary = false
+export (bool) var debug_save = false
 
 var library = {}
 
@@ -123,13 +120,13 @@ func _save_library(val):
 		
 		## Write to file
 		var file = File.new()
-		if save_as_dictionary:
-			push_warning("Saving SongLibrary to \"res://Library.tres\" as a Dictionary.")
-			file.open("res://Library.tres", File.WRITE)
-			file.store_var(library)
-			file.close()
-		else:
-			push_warning("Saving SongLibrary to \"res://Library.gd\" as a GDScript.")
+		push_warning("Saving SongLibrary to \"res://Library.tres\" as a Dictionary.")
+		file.open("res://Library.tres", File.WRITE)
+		file.store_var(library)
+		file.close()
+
+		if debug_save:
+			push_warning("Saving SongLibrary to \"res://Library.gd\" as a GDScript for DEBUG.")
 			var content = "extends Object\n"
 			content += "const library = " + JSON.print(library, "\t")
 			file.open("res://Library.gd", File.WRITE)

@@ -41,3 +41,9 @@ Generator
 
 ### Blackboard
 ### MusicController
+
+## TO DO
+These are some of the things that will probably interupt my game development.
+- Get rid of the `Library.gd` and replace it with `Library.tres`. Far more efficient.
+- Add transitions. There is currently no way to hop between segments, or songs.
+- Give Watchdogs more properties they can influence e.g. Filters, Panning, Overdrive, Flanger, etc.

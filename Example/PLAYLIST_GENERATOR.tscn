@@ -185,3 +185,11 @@ property_max = "INTENSITY_MAX"
 trigger_min = 0.5
 from_segment = "SEG_Chill"
 to_segment = "SEG_Intense"
+
+[node name="TZ_2" type="Node" parent="SONG"]
+script = ExtResource( 8 )
+property_current = "INTENSITY"
+property_max = "INTENSITY_MAX"
+trigger_max = 0.5
+from_segment = "SEG_Intense"
+to_segment = "SEG_Chill"

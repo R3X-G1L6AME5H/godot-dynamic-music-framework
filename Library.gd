@@ -80,7 +80,13 @@ const library = {
 				"start": 8,
 				"end": 16,
 				"transitions": [
-
+					{
+						"current": "INTENSITY",
+						"max": "INTENSITY_MAX",
+						"ceil": 0.5,
+						"floor": 0,
+						"target": "SEG_Chill"
+					}
 				]
 			}
 		},

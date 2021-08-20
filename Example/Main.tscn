@@ -292,16 +292,15 @@ THINGS TO NOTICE
 - There is also a random chance of little motifs playing 
   so watch out for that"
 text = "CONTROLS
-- [Arrow Keys] to move, [Enter] to heal, and [9][0] to change intensity
+- [Arrow Keys] to move, and [Enter] to heal
 
 THINGS TO NOTICE
 - Shots are in sync, and in pitch with the music
 - At 30% HP:
 	- the violins fade out & Cellos fade in
 	- the attack pattern changes
-- At intensity higher than 5, multiple violins enter
-- There is also a random chance of little motifs 
-  playing  so watch out for that"
+- There is also a random chance of little motifs playing 
+  so watch out for that"
 __meta__ = {
 "_edit_use_anchors_": false
 }

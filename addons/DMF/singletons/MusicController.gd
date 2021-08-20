@@ -391,4 +391,5 @@ func start_song( song_name : String ) -> void:
 	current_segment = SONG_LIBRARY[current_song].starting_segment
 	bar_length = (60.0 / float(SONG_LIBRARY[current_song].bpm)) * (4.0/float(SONG_LIBRARY[current_song].timesig2)) * float(SONG_LIBRARY[current_song].timesig1)
 	_init_song()
-	#_init_midi()
+	_init_midi()
+	is_playing = true

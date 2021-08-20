@@ -250,7 +250,7 @@ __meta__ = {
 [node name="REEDME" type="MarginContainer" parent="GUI"]
 anchor_top = 1.0
 anchor_bottom = 1.0
-margin_top = -200.0
+margin_top = -250.0
 margin_right = 385.0
 custom_constants/margin_left = 15
 custom_constants/margin_bottom = 15
@@ -263,13 +263,13 @@ __meta__ = {
 [node name="Panel" type="Panel" parent="GUI/REEDME"]
 margin_left = 15.0
 margin_right = 385.0
-margin_bottom = 185.0
+margin_bottom = 235.0
 custom_styles/panel = SubResource( 6 )
 
 [node name="MarginContainer" type="MarginContainer" parent="GUI/REEDME"]
 margin_left = 15.0
 margin_right = 385.0
-margin_bottom = 185.0
+margin_bottom = 235.0
 custom_constants/margin_right = 10
 custom_constants/margin_top = 10
 custom_constants/margin_left = 10
@@ -279,7 +279,7 @@ custom_constants/margin_bottom = 10
 margin_left = 10.0
 margin_top = 10.0
 margin_right = 360.0
-margin_bottom = 175.0
+margin_bottom = 225.0
 bbcode_enabled = true
 bbcode_text = "CONTROLS
 - [Arrow Keys] to move, and [Enter] to heal
@@ -292,15 +292,16 @@ THINGS TO NOTICE
 - There is also a random chance of little motifs playing 
   so watch out for that"
 text = "CONTROLS
-- [Arrow Keys] to move, and [Enter] to heal
+- [Arrow Keys] to move, [Enter] to heal, and [9][0] to change intensity
 
 THINGS TO NOTICE
 - Shots are in sync, and in pitch with the music
 - At 30% HP:
 	- the violins fade out & Cellos fade in
 	- the attack pattern changes
-- There is also a random chance of little motifs playing 
-  so watch out for that"
+- At intensity higher than 5, multiple violins enter
+- There is also a random chance of little motifs 
+  playing  so watch out for that"
 __meta__ = {
 "_edit_use_anchors_": false
 }

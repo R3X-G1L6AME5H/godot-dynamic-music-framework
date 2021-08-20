@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://addons/DMF/scripts/SONG.gd" type="Script" id=1]
 [ext_resource path="res://addons/DMF/scripts/PLAYLIST.gd" type="Script" id=2]
@@ -7,6 +7,7 @@
 [ext_resource path="res://addons/DMF/scripts/DataNodes/TRACK.gd" type="Script" id=5]
 [ext_resource path="res://addons/DMF/scripts/DataNodes/MIDI.gd" type="Script" id=6]
 [ext_resource path="res://addons/DMF/scripts/DataNodes/ONESHOT.gd" type="Script" id=7]
+[ext_resource path="res://addons/DMF/scripts/DataNodes/TRANSITION.gd" type="Script" id=8]
 
 [sub_resource type="Curve" id=1]
 min_value = -33.0
@@ -30,9 +31,11 @@ _data = [ Vector2( 0.220339, -10.2 ), -327.45, -3.21818, 0, 0, Vector2( 0.504237
 
 [node name="SONG_LIBRARY" type="Node"]
 script = ExtResource( 2 )
+debug_save = true
 
 [node name="SONG" type="Node" parent="."]
 script = ExtResource( 1 )
+default_segment = "SEG_Chill"
 
 [node name="MT_HIGH_HP_MIDI" type="Node" parent="SONG"]
 script = ExtResource( 6 )
@@ -75,7 +78,6 @@ end_bar = 16
 [node name="TR_Violins 2" type="Node" parent="SONG"]
 script = ExtResource( 5 )
 music_track = "res://Example/Assets/TRACK_!/2_Violin 2.ogg"
-start_bar = 2
 end_bar = 16
 
 [node name="TR_Violas" type="Node" parent="SONG"]
@@ -175,3 +177,11 @@ script = ExtResource( 7 )
 oneshot_sound = "res://Example/Assets/TRACK_!/8_BASSOON_OS4.wav"
 start_bar = 6
 trigger_chance = 0.15
+
+[node name="TZ_1" type="Node" parent="SONG"]
+script = ExtResource( 8 )
+property_current = "INTENSITY"
+property_max = "INTENSITY_MAX"
+trigger_min = 0.5
+from_segment = "SEG_Chill"
+to_segment = "SEG_Intense"

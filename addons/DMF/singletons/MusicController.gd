@@ -8,19 +8,22 @@ const SMF = preload("res://addons/DMF/singletons/SMF.gd")
 export (String, FILE, "*.tres") var path_to_song_library = "res://Library.tres"
 var SONG_LIBRARY : Dictionary
 
+## Used for tracking time, an AudioPlayer being the most precise method 
 onready var clock = $SyncPlayer
+var clock_offset : float = 0.0
 var position : float = 0
-var prev_position : float = position
 
 #### TRACKS ####
-var current_song = "SONG"
+var current_song = ""
 var bar_length : float
 var current_players = []
 var current_oneshots = []
-var current_segment = "SEG_Chill"
+var current_segment = ""
 var current_segment_start : float
 var current_segment_end   : float
 var watchdog_curves = []
+var is_playing = true
+
 class Player extends AudioStreamPlayer:
 	var start_time : float
 	var end_time : float
@@ -53,10 +56,7 @@ func _ready():
 	SONG_LIBRARY = file.get_var()
 	file.close()
 	
-	print(JSON.print(SONG_LIBRARY, "\t"))
-	bar_length = (60.0 / float(SONG_LIBRARY[current_song].bpm)) * (4.0/float(SONG_LIBRARY[current_song].timesig2)) * float(SONG_LIBRARY[current_song].timesig1)
-	_init_midi()
-	_init_song()
+	start_song("SONG")
 
 """
 Go through all tracks in this song and create players for it.
@@ -172,17 +172,25 @@ func _init_midi( ) -> void:
 
 ######################################################################################
 func _process(delta):
-	### CHECK SEGMENT
-	if current_segment_end - delta*2.0 < position:
-		seek(current_segment_start)
-	
-	## KEEP TRACK OF TIME
-	position = clock.get_playback_position() + AudioServer.get_time_since_last_mix() - AudioServer.get_output_latency()
-	
-	_process_tracks()
-	_process_watchdogs()
-	_process_oneshots(delta)
-	if midi_enabled: _process_midi()
+	if is_playing:
+		### CHECK SEGMENT
+		if current_segment_end - delta*2.0 < position:
+			for transition in SONG_LIBRARY[current_song].segments[current_segment].transitions:
+				var tmp = float(Blackboard.get(transition.current)) / float(Blackboard.get(transition.max))
+				if transition.floor <= tmp and tmp <= transition.ceil:
+					current_segment       = transition.target
+					current_segment_start = SONG_LIBRARY[current_song]["segments"][current_segment]["start"] * bar_length
+					current_segment_end   = SONG_LIBRARY[current_song]["segments"][current_segment]["end"] * bar_length
+				
+			seek(current_segment_start)
+		
+		## KEEP TRACK OF TIME
+		position = clock.get_playback_position() + AudioServer.get_time_since_last_mix() - AudioServer.get_output_latency() + clock_offset
+		
+		_process_tracks()
+		_process_watchdogs()
+		_process_oneshots(delta)
+		if midi_enabled: _process_midi()
 
 """
 Control when to toggle players.
@@ -331,8 +339,12 @@ func seek( seek_time : float ):
 		emit_signal("note_off", note)
 	notes_on.clear()
 	
-	### SEEK TIME
-	clock.seek( seek_time )
+	### RESET CLOCK AND UPDATE THE OFFSET
+	clock.seek( 0 )    # It will always reset to 0, regardless of the value
+	clock_offset = seek_time
+	## the clock will always go from 0 to the length of the segment,
+	## while the position will mark where in the song the player is playing
+	## COULD be useful
 	
 	### SYNC MIDI AND PLAYBACK
 	if midi_enabled:
@@ -362,3 +374,21 @@ func _midi_seek( seek_time : float, track_status_key : String ):
 			break
 		pointer += 1
 	midi_statuses[track_status_key].event_pointer = pointer
+
+"""
+Some control functions
+"""
+func get_song_list():
+	if SONG_LIBRARY == null:
+		return null
+	return SONG_LIBRARY.keys()
+
+func set_song():
+	pass
+
+func start_song( song_name : String ) -> void:
+	current_song = song_name
+	current_segment = SONG_LIBRARY[current_song].starting_segment
+	bar_length = (60.0 / float(SONG_LIBRARY[current_song].bpm)) * (4.0/float(SONG_LIBRARY[current_song].timesig2)) * float(SONG_LIBRARY[current_song].timesig1)
+	_init_song()
+	#_init_midi()

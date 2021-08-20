@@ -8,7 +8,8 @@ enum LIBRARY_NODE_TYPES {
 	SEGMENT,
 	ONESHOT, 
 	WATCHDOG, 
-	MIDI
+	MIDI,
+	TRANSITION
 }
 
 export (bool) var toggle = false setget _save_library
@@ -25,15 +26,20 @@ func _save_library(val):
 	if Engine.editor_hint:
 		toggle = false
 		for song in get_children():
+			if song.default_segment == "":
+				push_error("Cannot construnct a playlist if there is no start to a song")
+				return
+			
 			library[ song.name ] = {
-				"bpm"         : song.bpm,
-				"timesig1"    : song.timesig_numerator,
-				"timesig2"    : song.timesig_denominator,
-				"tracks"      : {},
-				"midis"       : {},
-				"segments"    : {},
-				"watchdogs"   : [],
-				"oneshots"    : []
+				"bpm"              : song.bpm,
+				"timesig1"         : song.timesig_numerator,
+				"timesig2"         : song.timesig_denominator,
+				"starting_segment" : song.default_segment,
+				"tracks"           : {},
+				"midis"            : {},
+				"segments"         : {},
+				"watchdogs"        : [],
+				"oneshots"         : []
 			}
 		
 			for element in song.get_children():
@@ -53,8 +59,9 @@ func _save_library(val):
 						continue
 					
 					library[ song.name ][ "segments" ][ element.name ] = {
-						"start" : element.starting_bar,
-						"end"   : element.ending_bar
+						"start"       : element.starting_bar,
+						"end"         : element.ending_bar,
+						"transitions" : []
 					}
 				elif element.lib_node_type == LIBRARY_NODE_TYPES.WATCHDOG:
 					if not element.target_track \
@@ -117,6 +124,20 @@ func _save_library(val):
 							temp_dict["max"]     = element.property_max
 					
 					library[ song.name ][ "midis" ][element.name] = temp_dict
+				elif element.lib_node_type == LIBRARY_NODE_TYPES.TRANSITION:
+					if element.from_segment == "NULL" or element.to_segment == "NULL" or \
+					   element.property_current == "" or element.property_max == "":
+						push_error(element.name + " INVALID")
+						continue
+					library[ song.name ][ "segments" ][ element.from_segment ]["transitions"].append({
+						"current" : element.property_current,
+						"max"     : element.property_max,
+						"ceil"    : element.trigger_max,
+						"floor"   : element.trigger_min,
+						"target"  : element.to_segment
+					})
+					
+		
 		
 		## Write to file
 		var file = File.new()

@@ -141,7 +141,7 @@ __meta__ = {
 }
 
 [node name="MarginContainer" type="MarginContainer" parent="GUI"]
-margin_right = 300.0
+margin_right = 450.0
 margin_bottom = 45.0
 custom_constants/margin_top = 15
 custom_constants/margin_left = 15
@@ -151,20 +151,26 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="HBoxContainer" type="HBoxContainer" parent="GUI/MarginContainer"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="GUI/MarginContainer"]
 margin_left = 15.0
 margin_top = 15.0
-margin_right = 300.0
+margin_right = 450.0
 margin_bottom = 45.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="GUI/MarginContainer/HBoxContainer2"]
+margin_right = 323.0
+margin_bottom = 30.0
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 3.0
 custom_constants/separation = 0
 
-[node name="Panel" type="Panel" parent="GUI/MarginContainer/HBoxContainer"]
+[node name="Panel" type="Panel" parent="GUI/MarginContainer/HBoxContainer2/HBoxContainer"]
 margin_right = 45.0
 margin_bottom = 30.0
 rect_min_size = Vector2( 45, 0 )
 custom_styles/panel = SubResource( 3 )
 
-[node name="Label" type="Label" parent="GUI/MarginContainer/HBoxContainer/Panel"]
+[node name="Label" type="Label" parent="GUI/MarginContainer/HBoxContainer2/HBoxContainer/Panel"]
 margin_left = 13.0
 margin_top = 8.0
 margin_right = 31.0
@@ -175,9 +181,9 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="HPBar" type="ProgressBar" parent="GUI/MarginContainer/HBoxContainer"]
+[node name="HPBar" type="ProgressBar" parent="GUI/MarginContainer/HBoxContainer2/HBoxContainer"]
 margin_left = 45.0
-margin_right = 285.0
+margin_right = 323.0
 margin_bottom = 30.0
 size_flags_horizontal = 3
 size_flags_vertical = 1
@@ -187,6 +193,59 @@ custom_colors/font_color = Color( 1, 1, 1, 1 )
 max_value = 1.0
 value = 1.0
 script = ExtResource( 2 )
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="GUI/MarginContainer/HBoxContainer2"]
+margin_left = 327.0
+margin_right = 435.0
+margin_bottom = 30.0
+size_flags_horizontal = 3
+
+[node name="Panel" type="Panel" parent="GUI/MarginContainer/HBoxContainer2/HBoxContainer2"]
+margin_right = 108.0
+margin_bottom = 30.0
+size_flags_horizontal = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="GUI/MarginContainer/HBoxContainer2/HBoxContainer2/Panel"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+custom_constants/margin_right = 10
+custom_constants/margin_left = 10
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HBoxContainer" type="HBoxContainer" parent="GUI/MarginContainer/HBoxContainer2/HBoxContainer2/Panel/MarginContainer"]
+margin_left = 10.0
+margin_right = 98.0
+margin_bottom = 30.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="GUI/MarginContainer/HBoxContainer2/HBoxContainer2/Panel/MarginContainer/HBoxContainer"]
+margin_top = 8.0
+margin_right = 57.0
+margin_bottom = 22.0
+size_flags_horizontal = 3
+text = "Intensity"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label2" type="Label" parent="GUI/MarginContainer/HBoxContainer2/HBoxContainer2/Panel/MarginContainer/HBoxContainer"]
+margin_left = 61.0
+margin_top = 8.0
+margin_right = 88.0
+margin_bottom = 22.0
+size_flags_horizontal = 3
+text = "0"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="REEDME" type="MarginContainer" parent="GUI"]
 anchor_top = 1.0

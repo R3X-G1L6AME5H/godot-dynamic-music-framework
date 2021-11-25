@@ -2,6 +2,9 @@ tool
 extends DynamicMusicFramework
 class_name DMFPlaylistGenerator
 
+"""
+	Playlist Generator for the MusicControler by Nino Candrlic @R3X_G1L6AME5H
+"""
 
 enum LIBRARY_NODE_TYPES {
 	TRACK,
@@ -26,10 +29,9 @@ func _save_library(val):
 	if Engine.editor_hint:
 		toggle = false
 		for song in get_children():
-			if song.default_segment == "":
-				push_error("Cannot construnct a playlist if there is no start to a song")
-				return
+			assert(song.default_segment != "", "Cannot construnct a playlist if there is no start to a song")
 			
+			## This is the template according to which the MusicController operates
 			library[ song.name ] = {
 				"bpm"              : song.bpm,
 				"timesig1"         : song.timesig_numerator,
@@ -42,101 +44,87 @@ func _save_library(val):
 				"oneshots"         : []
 			}
 		
+			## Descend the tree and store the node's data into the dictionary
 			for element in song.get_children():
-				if element.lib_node_type == LIBRARY_NODE_TYPES.TRACK:
-					if not element.music_track: 
-						push_error(element.name + " INVALID")
-						continue
+				match(element.lib_node_type):
+					LIBRARY_NODE_TYPES.TRACK:
+						assert(element.music_track != null, element.name + " INVALID")
+						library[ song.name ][ "tracks" ][ element.name ] = {
+							"path"  : element.music_track,
+							"start" : element.start_bar,
+							"end"   : element.end_bar
+						}
+					
+					LIBRARY_NODE_TYPES.SEGMENT:
+						assert ( element.starting_bar != element.ending_bar, element.name + " the section starts and ends on the same bar")
+						
+						library[ song.name ][ "segments" ][ element.name ] = {
+							"start"       : element.starting_bar,
+							"end"         : element.ending_bar,
+							"transitions" : []
+						}
+					
+					LIBRARY_NODE_TYPES.WATCHDOG:
+						assert(element.target_track and element.property_current \
+							and element.property_max and element.change_property, element.name + " a property is missing")
+						
+						library[ song.name ][ "watchdogs" ].append( {
+							"track"   : element.target_track,
+							"current" : element.property_current,
+							"max"     : element.property_max,
+							"target"  : element.change_property,
+							"graph"   : _graph_2_json(element.change_graph)
+						} )
 				
-					library[ song.name ][ "tracks" ][ element.name ] = {
-						"path"  : element.music_track,
-						"start" : element.start_bar,
-						"end"   : element.end_bar
-					}
-				elif element.lib_node_type == LIBRARY_NODE_TYPES.SEGMENT:
-					if element.starting_bar == element.ending_bar: 
-						push_error(element.name + " INVALID")
-						continue
+					LIBRARY_NODE_TYPES.ONESHOT:
+						assert(element.oneshot_sound != null, element.name + " no sound defined")
+						library[ song.name ][ "oneshots" ].append({
+							"path"   : element.oneshot_sound,
+							"start"  : element.start_bar,
+							"chance" : element.trigger_chance
+						})
 					
-					library[ song.name ][ "segments" ][ element.name ] = {
-						"start"       : element.starting_bar,
-						"end"         : element.ending_bar,
-						"transitions" : []
-					}
-				elif element.lib_node_type == LIBRARY_NODE_TYPES.WATCHDOG:
-					if not element.target_track \
-						or not element.property_current \
-						or not element.property_max \
-						or not element.change_property: 
-							push_error(element.name + " INVALID")
-							continue
-					
-					library[ song.name ][ "watchdogs" ].append( {
-						"track"   : element.target_track,
-						"current" : element.property_current,
-						"max"     : element.property_max,
-						"target"  : element.change_property,
-						"graph"   : _graph_2_json(element.change_graph)
-					} )
-				elif element.lib_node_type == LIBRARY_NODE_TYPES.ONESHOT:
-					library[ song.name ][ "oneshots" ].append({
-						"path"   : element.oneshot_sound,
-						"start"  : element.start_bar,
-						"chance" : element.trigger_chance
-					})
-				elif element.lib_node_type == LIBRARY_NODE_TYPES.MIDI:
-					if element.midi_file == "":
-						push_error(element.name + " INVALID")
-						continue
+					LIBRARY_NODE_TYPES.MIDI:
+						assert(element.midi_file != "", element.name + " no midi file selected")
 						
-					var temp_dict = {}
-					temp_dict["midi"]            = element.midi_file
-					temp_dict["start"]           = element.starting_bar
-					temp_dict["end"]             = element.ending_bar
-					temp_dict["single_trigger"]  = element.single_value_trigger
-					
-					temp_dict["pitch"] = element.pitch_correction
-					if element.pitch_correction:
-						if element.pitch_bus == "":
-							push_error(element.name + " INVALID")
-							continue
-						temp_dict["bus"] = element.pitch_bus
-						temp_dict["sfx"] = element.pitch_effect_id
-					
-					if element.single_value_trigger:
-						if element.trigger_property == "":
-							push_error(element.name + " INVALID")
-							continue
-					
-						temp_dict["value"]    = element.trigger_value
-						temp_dict["property"] = element.trigger_property
-					
-					else:
-						temp_dict["floor"]    = element.trigger_min
-						temp_dict["ceil"]     = element.trigger_max
+						var temp_dict = {}
+						temp_dict["midi"]            = element.midi_file
+						temp_dict["start"]           = element.starting_bar
+						temp_dict["end"]             = element.ending_bar
+						temp_dict["single_trigger"]  = element.single_value_trigger
 						
-						if element.trigger_min != 0 or element.trigger_max != 1:
-							if element.property_current == "" or element.property_max == "":
-								push_error(element.name + " INVALID")
-								continue 
-					
-							temp_dict["current"] = element.property_current
-							temp_dict["max"]     = element.property_max
-					
-					library[ song.name ][ "midis" ][element.name] = temp_dict
-				elif element.lib_node_type == LIBRARY_NODE_TYPES.TRANSITION:
-					if element.from_segment == "NULL" or element.to_segment == "NULL" or \
-					   element.property_current == "" or element.property_max == "":
-						push_error(element.name + " INVALID")
-						continue
-					library[ song.name ][ "segments" ][ element.from_segment ]["transitions"].append({
-						"current" : element.property_current,
-						"max"     : element.property_max,
-						"ceil"    : element.trigger_max,
-						"floor"   : element.trigger_min,
-						"target"  : element.to_segment
-					})
-					
+						temp_dict["pitch"] = element.pitch_correction
+						if element.pitch_correction:
+							assert( element.pitch_bus != "", element.name + " pitch bus not defined")
+							temp_dict["bus"] = element.pitch_bus
+							temp_dict["sfx"] = element.pitch_effect_id
+						
+						if element.single_value_trigger:
+							assert(element.trigger_property != "", element.name + " INVALID")
+							temp_dict["value"]    = element.trigger_value
+							temp_dict["property"] = element.trigger_property
+						
+						else:
+							temp_dict["floor"]    = element.trigger_min
+							temp_dict["ceil"]     = element.trigger_max
+							
+							if element.trigger_min != 0 or element.trigger_max != 1:
+								assert (element.property_current != "" and element.property_max != "", element.name + " INVALID")
+								temp_dict["current"] = element.property_current
+								temp_dict["max"]     = element.property_max
+						
+						library[ song.name ][ "midis" ][element.name] = temp_dict
+				
+					LIBRARY_NODE_TYPES.TRANSITION:
+						assert( element.from_segment != "NULL" and element.to_segment != "NULL" and \
+								element.property_current != "" and element.property_max != "", element.name + " INVALID")
+						library[ song.name ][ "segments" ][ element.from_segment ]["transitions"].append({
+							"current" : element.property_current,
+							"max"     : element.property_max,
+							"ceil"    : element.trigger_max,
+							"floor"   : element.trigger_min,
+							"target"  : element.to_segment
+						})
 		
 		
 		## Write to file
@@ -145,7 +133,8 @@ func _save_library(val):
 		file.open("res://Library.tres", File.WRITE)
 		file.store_var(library)
 		file.close()
-
+		
+		## This option exists purely so that the developer MAY SEE how the node tree was converted to the dictionary
 		if debug_save:
 			push_warning("Saving SongLibrary to \"res://Library.gd\" as a GDScript for DEBUG.")
 			var content = "extends Object\n"
@@ -156,6 +145,10 @@ func _save_library(val):
 		
 		toggle = false
 
+"""
+A function that stores Curve object's data into a dictionary, so that it may be reconstructed later.
+(this is because Godot will just store a string if writen to a GDScript file)
+"""
 static func _graph_2_json( gp : Curve ) -> Dictionary:
 	var dict = {"pos" : [], "tg" : [], "tgm" : []}
 	for idx in gp.get_point_count():

@@ -1,5 +1,9 @@
 extends Node
 
+"""
+	Simple Blackboard Implementation by Nino Candrlic @R3X_G1L6AME5H
+"""
+
 var blackboard = {}
 
 signal blackboard_value_set( key )

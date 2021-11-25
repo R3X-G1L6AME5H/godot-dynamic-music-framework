@@ -8,7 +8,8 @@ const SMF = preload("res://addons/DMF/singletons/SMF.gd")
 export (String, FILE, "*.tres") var path_to_song_library = "res://Library.tres"
 var SONG_LIBRARY : Dictionary
 
-## Used for tracking time, an AudioPlayer being the most precise method 
+#### TIME TRACKING #### 
+## an AudioPlayer being the most precise method 
 onready var clock = $SyncPlayer
 var clock_offset : float = 0.0
 var position : float = 0
@@ -16,6 +17,7 @@ var position : float = 0
 #### TRACKS ####
 var current_song = ""
 var bar_length : float
+## "current_*" reffers to the elements of the song that is currently selected
 var current_players = []
 var current_oneshots = []
 var current_segment = ""
@@ -30,6 +32,7 @@ class Player extends AudioStreamPlayer:
 	var trigger_chance : float
 
 #### MIDI ####
+## Adapted from Yui Kinomoto's (@arlez80) Midi Player plugin
 var midi_statuses = {}
 var midi_enabled = false
 var notes_on = {}
@@ -49,14 +52,20 @@ class GodotMIDIPlayerTrackStatus:
 	var end_time      : float
 
 
+
 #####################################################################################
 func _ready():
+	### Get the playlist
 	var file = File.new()
 	file.open(path_to_song_library, File.READ)
 	SONG_LIBRARY = file.get_var()
 	file.close()
 	
-	start_song("SONG")
+	### Only for debug ###
+	# start_song("SONG")
+
+
+
 
 """
 Go through all tracks in this song and create players for it.
@@ -68,14 +77,14 @@ func _init_song() -> void:
 		player.name = track
 		player.start_time = SONG_LIBRARY[current_song]["tracks"][track]["start"] * bar_length
 		player.end_time = SONG_LIBRARY[current_song]["tracks"][track]["end"] * bar_length
-		
-		### add mechanism for start offsets
-		
 		player.stream = load( SONG_LIBRARY[current_song]["tracks"][track]["path"] )
+		
+		## A bus is created for each audio player, so that there may be effects added and controled by the script
 		AudioServer.add_bus()
 		AudioServer.set_bus_name(AudioServer.bus_count-1, track)
 		AudioServer.set_bus_send(AudioServer.get_bus_index(track), "Maestro")
 		player.bus = track
+		
 		add_child(player)                 ### Remove with queue_free on current_players array
 		current_players.append(player)
 	
@@ -92,6 +101,10 @@ func _init_song() -> void:
 	
 	#### CONSTRUCT WATCHDOG CURVES
 	for watchdog in SONG_LIBRARY[current_song].watchdogs:
+		### TODO: Given that PlaylistGenerator saves to a .tres file, then the curve doesn't need to be reconstructed 
+		###       since the object is stored as a variable
+		
+		### The curve must be constructed anew
 		var crv = Curve.new()
 		for idx in range(watchdog.graph.pos.size()):
 			crv.add_point(  Vector2(watchdog.graph.pos[idx][0], watchdog.graph.pos[idx][1]),
@@ -103,34 +116,41 @@ func _init_song() -> void:
 		watchdog_curves.append(crv)
 	
 	
-	#### SEGMENT CONTROL
+	#### PICK THE ACTIVE SEGMENT
 	current_segment_start = SONG_LIBRARY[current_song]["segments"][current_segment]["start"] * bar_length
 	current_segment_end   = SONG_LIBRARY[current_song]["segments"][current_segment]["end"] * bar_length
 	
+	
+	#### TODO: consider moving the duty of starting the song elsewhere
+	## Start all players which are supposed to play on start 
 	for player in current_players:
 		if player.start_time == 0:
 			player.playing = true
 	
 	clock.play()
 
+
+
+
 """
-Go through all midis in this song and create players for it.
+Go through all midis in this song and create players for them.
 """
 func _init_midi( ) -> void:
 	if SONG_LIBRARY[current_song]["midis"].empty():
 		midi_enabled = false
 		return
 	
+	### This has to do with how midi files are read and interpreted
+	## Most of this is just coppied from Yui Kinomoto's (@arlez80) Midi Player plugin
+	## so unless you wanna check that, just hope this doesn't break
 	midi_enabled = true
 	var smf = SMF.new()
 	for track_key in SONG_LIBRARY[current_song]["midis"].keys():
 		var midi_data = smf.read_file( SONG_LIBRARY[current_song]["midis"][track_key].midi )
-		if midi_data == null:
-			push_error("Can't load " + SONG_LIBRARY[current_song]["midis"][track_key].midi + ".")
-			continue
+		
+		assert(midi_data != null, "Can't load " + SONG_LIBRARY[current_song]["midis"][track_key].midi + ".")
 		
 		midi_statuses[track_key] = GodotMIDIPlayerTrackStatus.new( )
-		
 		midi_statuses[track_key].event_pointer = 0
 		
 		if len( midi_data.tracks ) == 1:
@@ -170,11 +190,15 @@ func _init_midi( ) -> void:
 		midi_statuses[track_key].start_time    = SONG_LIBRARY[current_song]["midis"][track_key]["start"] * bar_length
 		midi_statuses[track_key].end_time      = SONG_LIBRARY[current_song]["midis"][track_key]["end"] * bar_length
 
+
+
 ######################################################################################
+## TODO: consider changing with _physics_process
 func _process(delta):
 	if is_playing:
-		### CHECK SEGMENT
-		if current_segment_end - delta*2.0 < position:
+		### CHECK IF THE POSITION IS IN THE SEGMENT
+		if current_segment_end - delta * 2.0 < position:
+			## Jump to the begining of the segment if not
 			for transition in SONG_LIBRARY[current_song].segments[current_segment].transitions:
 				var tmp = float(Blackboard.get(transition.current)) / float(Blackboard.get(transition.max))
 				if transition.floor <= tmp and tmp <= transition.ceil:
@@ -187,22 +211,34 @@ func _process(delta):
 		## KEEP TRACK OF TIME
 		position = clock.get_playback_position() + AudioServer.get_time_since_last_mix() - AudioServer.get_output_latency() + clock_offset
 		
+		## TURN PLAYERS ON/OFF
 		_process_tracks()
+		
+		## TRACK BLACKBOARD VALUES AND CHANGE TRACK PROPERTIES
 		_process_watchdogs()
+		
+		## ROLL A DICE TO SEE IF ANY ONESHOT SHOULD PLAY
 		_process_oneshots(delta)
+		
+		## SEE IF ANY MIDI NOTE HAS BEEN PRESSED
 		if midi_enabled: _process_midi()
+
+
+
 
 """
 Control when to toggle players.
 """
 func _process_tracks() -> void:
-	### TURN ON/OF PLAYERS
 	for player in current_players:
 		if player.start_time < position and not player.playing:
 			player.seek(position - player.start_time)
 			player.playing = true
 		elif player.end_time < position and player.playing:
 			player.playing = false
+
+
+
 
 """
 Check how the stats that the watchdogs observe change, 
@@ -219,18 +255,21 @@ func _process_watchdogs() -> void:
 							0, \
 							1) \
 						)
+			## APPLY THE CHANGE TO THE TARGET PROPERTY (volume, reverb, phaser, filter, etc)
 			match (SONG_LIBRARY[current_song].watchdogs[idx].target):
 				"VOL":
 					AudioServer.set_bus_volume_db(bus_id, value)
+
+
+
 
 """
 Roll the dice to see if an oneshot should be played.
 """
 func _process_oneshots( delta : float ) -> void:
-	## CHECK ON ONESHOTS
 	for oneshot in current_oneshots:
 		if position > oneshot.start_time and position < oneshot.start_time + delta * 2:
-			#prints("Triggered", oneshot.trigger_chance)
+			## Roll the dice
 			if randf() <= oneshot.trigger_chance:
 				oneshot.play()
 
@@ -329,6 +368,10 @@ func _process_midi() -> void:
 						#printt("ON", event_note_on.note )
 						emit_signal("note_on", stat_key, event_note_on)
 
+
+
+
+
 """
 Move the marker to the the place in a song you want.
 Used for transitions, and loops.
@@ -362,6 +405,10 @@ func seek( seek_time : float ):
 		else:
 			player.playing = false
 
+
+
+
+
 """
 A special function to move the MIDI marker.
 """
@@ -375,8 +422,11 @@ func _midi_seek( seek_time : float, track_status_key : String ):
 		pointer += 1
 	midi_statuses[track_status_key].event_pointer = pointer
 
+
+
+
 """
-Some control functions
+Some control functions(sorely lacking)
 """
 func get_song_list():
 	if SONG_LIBRARY == null:

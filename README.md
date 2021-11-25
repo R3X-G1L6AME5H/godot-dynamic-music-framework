@@ -7,19 +7,31 @@ What does the workflow look like? Open your favourite DAW. Make your music. Expo
 ## Usage
 There is quite a bit to go through so the usage will be explained through an example; a real-life use case for this plugin.
 
+## Act I - Before I forget
+Before we start, we need to figure out what we want. For this example, I wish to make a simple bullet-hell game in which attacks syncronize with music. 
 
-## Act I - Boops and Beeps
+So what do we need for this. What game states exist that the music will highlight. Lets start simple, low HP. Something happens to the music when player gets hurt. This implies that there is certain music playing when player is ok. Further more, since I am a lazy dev, lets make it so that when the player survives for long enough the music shifts to something more upbeat. Like a stage two of a boss fight.
+
+So that makes four states. Stage I, Stage II, Stage I low HP, and Stage II low HP. In this composition, lets have a string section and a brass section. The string section will be fast, while the brass section will be slow and grand. Idea is to make the music (and consequently the attacks) fast when Player's HP is high, and slow when Player's HP is low. And maybe we'll add a piano for some random fills to keep the music interesting.
+
+
+![Plan Diagram](https://raw.githubusercontent.com/R3X-G1L6AME5H/godot-dynamic-music-framework/master/Example/Images/PlanDiagram.png)
+
+
+## Act II - Boops and Beeps
 Before we can even start talking about the plugin we must first talk about the music itself. There are certain things to keep in mind when composing for your game. Its a matter of structure. 
 
 ![Music Structure](https://raw.githubusercontent.com/R3X-G1L6AME5H/godot-dynamic-music-framework/master/Example/Images/DMF_ABSTRACT.png)
+
+
 One section must blend well into another, to allow for horizontal mixing. Each track must sound good alone, and in combination with every other track to allow for vertical mixing. You may thow a few melodical phrases in as well, with intention to have them randomly play in your game. And lastly, you will wish to write down some midi that will play no sound, but will instead function as a syncronizing medium.
 * The making of the soundtrack(what to keep in mind)
 * the exporting
 
-## Act II - Organizing the goods
+## Act III - Organizing the goods
 * the nodes explained and visualized
 
-## Act III - The Conductor
+## Act IV - The Conductor
 * how to set up your scene(bus layout)
 * wiring up the signals
 

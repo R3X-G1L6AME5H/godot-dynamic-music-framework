@@ -11,7 +11,7 @@ There is quite a bit to go through so the usage will be explained through an exa
 ## Act I - Boops and Beeps
 Before we can even start talking about the plugin we must first talk about the music itself. There are certain things to keep in mind when composing for your game. Its a matter of structure. 
 
-![Music Structure]()
+![Music Structure](https://raw.githubusercontent.com/R3X-G1L6AME5H/godot-dynamic-music-framework/master/Example/Images/DMF_ABSTRACT.png)
 One section must blend well into another, to allow for horizontal mixing. Each track must sound good alone, and in combination with every other track to allow for vertical mixing. You may thow a few melodical phrases in as well, with intention to have them randomly play in your game. And lastly, you will wish to write down some midi that will play no sound, but will instead function as a syncronizing medium.
 * The making of the soundtrack(what to keep in mind)
 * the exporting

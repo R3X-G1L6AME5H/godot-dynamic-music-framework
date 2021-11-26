@@ -5,7 +5,7 @@ It is a Godot plugin for dynamic music. It was designed to add dynamics to the g
 What does the workflow look like? Open your favourite DAW. Make your music. Export your tracks and midi's to your project's asset directory. Use the Playlist Generator to quickly and intuitively organize your music in a way the plugin will understand. Organize your sound buses. Wire up your scripts to the `MusicController`'s signals. And bada-bing bada-boom, all is good.
 
 ## Usage
-There is quite a bit to go through so the usage will be explained through an example; a real-life use case for this plugin.
+There is quite a bit to go through so the usage will be explained through an example; a real-life use case for this plugin. I will also try to fit as many images as posible for better viewing experience.
 
 ## Act I - Before I forget
 Before we start, we need to figure out what we want. For this example, I wish to make a simple bullet-hell game in which attacks syncronize with music. 
@@ -18,18 +18,44 @@ So that makes four states. Stage I, Stage II, Stage I low HP, and Stage II low H
 ![Plan Diagram](https://raw.githubusercontent.com/R3X-G1L6AME5H/godot-dynamic-music-framework/master/Example/Images/PlanDiagram.png)
 
 
-## Act II - Boops and Beeps
-Before we can even start talking about the plugin we must first talk about the music itself. There are certain things to keep in mind when composing for your game. Its a matter of structure. 
+## Act II - Beeps and Boops
+Now its time to actually write the music. Open up your favourite DAW, and/or get ready to record. I will use LMMS. There is a couple things to keep track of for future refference; BPM, Time Signature, and Bar numbers. 
+![Whacha Lookin For](https://raw.githubusercontent.com/R3X-G1L6AME5H/godot-dynamic-music-framework/master/Example/Images/FOR_THE_UNAFFILIATED.png)
+BPM and time signature will give the plugin the lenght of a bar. This is important because the plugin figures out what to play and when to play it depending on which bar it's in.
 
-![Music Structure](https://raw.githubusercontent.com/R3X-G1L6AME5H/godot-dynamic-music-framework/master/Example/Images/DMF_ABSTRACT.png)
+I have gone ahead and made a little composition for the demo. The composition looks like this. So what is going on here. As planned, we have three instrumental sections: the **Strings**(Violins, Violas, Cellos, and Contrabass'), the **Brass**(Trumpets, Horns, and Trombones), and the **Piano**. The strings are playing in a fast rhytmic staccato, while the brass plays long, majestic, legato. Finally we have the piano to add a bit of randomness and interest to these 16 bars. Finally, if you look closely, there is an Events instrument at the bottom; this will become important later.
+
+So, what did I take into consideration when making this track. 
+#### Horizontal Mixing
+Hoizontal mixing is very simple. It assumes that your music is divided into sections. You just have to make sure that whatever comes *after* your section, fits well with the *end* of your section. In the example, the first eight bars work well regardless of if they [loop to the begining](), move on to the [next eight bars](). 
+
+When working on your music, you aim to make the jumps between sections as unnoticable as posible. This will mostly depend on the melody, rhythm, and chord progression. The lenght of your section will play the part as well: a stutter every 4 bars is far more noticable than the stutter that occurs every 16 bars. This will come at the cost of music's adaptability, since it will take it a while longer to get to the end, where the jump occurs, but it wouldn't matter much for more environmental music. 
+
+Another thing that will help mask the jump is reverb. **DO NOT APPLY IT IN YOUR DAW!** Its better to let Godot handle the reverb. This is because the plugin simply plays a file. When a jump occurs it just moves to another place in that file. It ignores everything after it, including the tail of the reverb. Then the stututer becomes even more obvious: not only does the music change, but the reverb dissapears as well. Letting Godot handle the reverb fixes this issue.
+
+#### Vertical Mixing
+Vertical mixing doesn't jump between tracks like horizontal mixing, but rather, it blends between them. The tracks play at the same time, but at different volumes. Imagine you were playing to recordings on two phones. One phone plays the piano part, and the other plays the violin part for the same song. If both recordings are in sync, you can mix between them by turning the volume of the phone up or down. First only the piano plays. Then you gently turn up the violin part, and now they mix together. This is vertical mixing.
+
+So what do you need to keep track? Firstly, you must divide the sounds playing at the same time into sections(again). We already did this for this example, remember: Brass, Strings, and Piano. Strings on high HP, and brass on low HP. Next, you must make them sound good. Both [together](), and [apart]().
+
+#### Embelishments
+To make your music more dynamic, you can add some randomness to it. Little musical motifs which sometimes play... and sometimes don't. Even a looping 4 chord progression can sound godly if there is a good solo floating above it. Just add some simple motif's, embelishments, or odd notes. Do try to make them sound good with whatever is in the background, but also plan for their uncertain nature.
+
+#### Pitch Correction
+This has nothing to do with the DAW itself. Think back to games like Abzu, or Journey, where each sound effect plays like an instrument, adding a bit of harmonic, and melodic complexity. Now, you could chose to make your game's sound effects meldical when making them, but maybe you wish to make them melodical retroactivly. In comes pitch correction. To be precise, it is just a midi file. And in this midi file, there is **only a melody** i.e. **only one note** is being pressed at a time. When the plugin reads this file, it will attempt to pitch shift every sound connected to a certain audio bus in Godot.
+
+#### Events
+Up till this point we have only looked at ways to make the music addapt to the gameplay, but now we shall take a look at a way for the music to influence the gameplay.
 
 
-One section must blend well into another, to allow for horizontal mixing. Each track must sound good alone, and in combination with every other track to allow for vertical mixing. You may thow a few melodical phrases in as well, with intention to have them randomly play in your game. And lastly, you will wish to write down some midi that will play no sound, but will instead function as a syncronizing medium.
+
 * The making of the soundtrack(what to keep in mind)
 * the exporting
 
 ## Act III - Organizing the goods
 * the nodes explained and visualized
+
+![Music Structure](https://raw.githubusercontent.com/R3X-G1L6AME5H/godot-dynamic-music-framework/master/Example/Images/DMF_ABSTRACT.png)
 
 ## Act IV - The Conductor
 * how to set up your scene(bus layout)

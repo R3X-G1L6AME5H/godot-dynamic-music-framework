@@ -24,9 +24,9 @@ Now its time to actually write the music. Open up your favourite DAW, and/or get
 ![Whacha Lookin For](https://raw.githubusercontent.com/R3X-G1L6AME5H/godot-dynamic-music-framework/master/Example/Images/FOR_THE_UNAFFILIATED.png)
 
 
-I have gone ahead and made a little composition for the demo. The composition looks like this, with Brass and Strings sounding like [this](../blob/master/Example/SongSnippets/StringsAndBrass.mp3), and piano sounding like [this](../blob/master/Example/SongSnippets/Piano.mp3). 
+I have gone ahead and made a little composition for the demo. The composition looks like this, with Brass and Strings sounding like [this](./Example/SongSnippets/StringsAndBrass.mp3), and piano sounding like [this](./Example/SongSnippets/Piano.mp3). 
 
-![Demo](../blob/master/Example/Images/DEMO.png)
+![Demo](./Example/Images/DEMO.png)
 
 So what is going on here. As planned, we have three instrumental sections: the **Strings**(Violins, Violas, Cellos, and Contrabass'), the **Brass**(Trumpets, Horns, and Trombones), and the **Piano**. The strings are playing in a fast rhytmic staccato, while the brass plays long, majestic, legato. Finally we have the piano to add a bit of randomness and interest to these 16 bars. Finally, if you look closely, there is a Pitch Correction, and an Events instrument at the bottom; this will become important later.
 

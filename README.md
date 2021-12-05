@@ -15,18 +15,18 @@ So what do we need for this. What game states exist that the music will highligh
 So that makes four states. Stage I, Stage II, Stage I low HP, and Stage II low HP. In this composition, lets have a string section and a brass section. The string section will be fast, while the brass section will be slow and grand. Idea is to make the music (and consequently the attacks) fast when Player's HP is high, and slow when Player's HP is low. And maybe we'll add a piano for some random fills to keep the music interesting.
 
 
-![Plan Diagram](https://raw.githubusercontent.com/R3X-G1L6AME5H/godot-dynamic-music-framework/master/Example/Images/PlanDiagram.png)
+![Plan Diagram](./Example/Images/PlanDiagram.png)
 
 
 ### Act II - Beeps and Boops
 Now its time to actually write the music. Open up your favourite DAW, and/or get ready to record. I will use LMMS. There is a couple things to keep track of for future refference; BPM, Time Signature, and Bar numbers. BPM and time signature will give the plugin the length of a bar. This is important because the plugin figures out what to play and when to play it depending on which bar it's in.
 
-![Whacha Lookin For](https://raw.githubusercontent.com/R3X-G1L6AME5H/godot-dynamic-music-framework/master/Example/Images/FOR_THE_UNAFFILIATED.png)
+![Whacha Lookin For](./Example/Images/FOR_THE_UNAFFILIATED.png)
 
 
 I have gone ahead and made a little composition for the demo. The composition looks like this, with Brass and Strings sounding like [this](./Example/SongSnippets/StringsAndBrass.mp3), and piano sounding like [this](./Example/SongSnippets/Piano.mp3). 
 
-![Demo](./Example/Images/DEMO.png)
+![Demo](./Example/Images/DEMO.PNG)
 
 So what is going on here. As planned, we have three instrumental sections: the **Strings**(Violins, Violas, Cellos, and Contrabass'), the **Brass**(Trumpets, Horns, and Trombones), and the **Piano**. The strings are playing in a fast rhytmic staccato, while the brass plays long, majestic, legato. Finally we have the piano to add a bit of randomness and interest to these 16 bars. Finally, if you look closely, there is a Pitch Correction, and an Events instrument at the bottom; this will become important later.
 

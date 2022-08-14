@@ -2,27 +2,58 @@ tool
 extends DMFLibraryClasses
 class_name DMFMidiPlayer
 
-const lib_node_type = 4
+"""
+	Dynamic Music Framework MIDI Node
+		by Nemo Czanderlitch/Nino Čandrlić
+			@R3X-G1L       (godot assets store)
+			R3X-G1L6AME5H  (github)
 
+	A (child) data node used by the DMF Playlist Generator. This is where the music may
+	influence the game world. The purpuse of this node is to refference a midi file which
+	acts as a orchestrator of behaviour i.e. a midi key press can trigger an event in game.
+"""
+
+
+const lib_node_type = 4 # Dirty and cheap way of determinig if a Node is a part of this plugin.
+
+
+## Path to the MIDI track
 export (String, FILE, "*.mid") var midi_file
+## The bar at which the MIDI track is ment to start playing
 export (int) var starting_bar
+## The bar at which the MIDI track is ment to stop playing
 export (int) var ending_bar
+## Whether a the midi is played when a property is a single value, or within a range of values
 export (bool) var single_value_trigger = true setget _single_val_bool_toggeled
-### SINGLE VALUE TRIGGER
+
+
+#### SINGLE VALUE TRIGGER
+## What values makes the MIDI track play
 var trigger_value : int = 1
+## Where does the value come from in BLACKBOARD
 var trigger_property : String
 
 ### MULTIPLE VALUE TRIGGER
+## Within what range of values will the MIDI track play
 var trigger_min : float = 0.0 setget _trigger_min_set
 var trigger_max : float = 1.0 setget _trigger_max_set
+
+## Which property in the BLACKBOARD is being monitored for its current state
 var property_current : String = ""
+## Which property in the BLACKBOARD is being read for the Max value possible value of the current state
+## 		This is in purpuse of normalizing the range i.e.  current / max = normalized value [0, 1]
 var property_max : String = ""
 
-### PITCH CORRECTION ON
+#### PITCH CORRECTION ON
+## Whether the MIDI track is ment to pitch shift an audio Bus
 var pitch_correction : bool = false setget _pitch_correction_toggled
 var pitch_bus : String = ""
+## What is the effect ID of the PitchShift within the Bus
 var pitch_effect_id : int = 0
 
+
+####  B O I L E R P L A T E  #####
+##################################
 
 func _pitch_correction_toggled(val):
 	pitch_correction = bool(val)

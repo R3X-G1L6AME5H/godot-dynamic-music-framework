@@ -3,7 +3,15 @@ extends DynamicMusicFramework
 class_name DMFPlaylistGenerator
 
 """
-	Playlist Generator for the MusicControler by Nino Candrlic @R3X_G1L6AME5H
+	Dynamic Music Framework - Playlist Generator
+		by Nemo Czanderlitch/Nino Čandrlić
+			@R3X-G1L       (godot assets store)
+			R3X-G1L6AME5H  (github)
+
+	The node that takes a tree of data nodes, and converts all that data into
+	a .tres file, Which can then be used directly by the Music Controller singleton.
+	This node and all the data nodes are for organizing data in a more intuitive
+	way.
 """
 
 enum LIBRARY_NODE_TYPES {
@@ -15,7 +23,10 @@ enum LIBRARY_NODE_TYPES {
 	TRANSITION
 }
 
+
+## A button that converts the tree to "res://Library.tres"
 export (bool) var toggle = false setget _save_library
+## When ticked, saves to "res://Library.gd"; makes all the data visible
 export (bool) var debug_save = false
 
 var library = {}

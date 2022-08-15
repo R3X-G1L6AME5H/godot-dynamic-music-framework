@@ -8,7 +8,7 @@ class_name DMFTransition
 			@R3X-G1L       (godot assets store)
 			R3X-G1L6AME5H  (github)
 
-	A (child) data node used by the DMF Playlist Generator. Its purpuse is holding data
+	A (child) data node used by the DMF Song. Its purpuse is holding data
 	which determine when, and if there should occur a transition between segments.
 """
 

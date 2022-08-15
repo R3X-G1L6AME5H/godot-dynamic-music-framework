@@ -7,7 +7,7 @@ class_name DMFSegment
 			@R3X-G1L       (godot assets store)
 			R3X-G1L6AME5H  (github)
 
-	A (child) data node used by the DMF Playlist Generator. The purpuse of Segments
+	A (child) data node used by the DMF Song. The purpuse of Segments
 	is to determine the horizontal sections of a track. These are later used by
 	transitions to move between different areas in the track.
 

@@ -8,7 +8,7 @@ class_name DMFMidiPlayer
 			@R3X-G1L       (godot assets store)
 			R3X-G1L6AME5H  (github)
 
-	A (child) data node used by the DMF Playlist Generator. This is where the music may
+	A (child) data node used by the DMF Song. This is where the music may
 	influence the game world. The purpuse of this node is to refference a midi file which
 	acts as a orchestrator of behaviour i.e. a midi key press can trigger an event in game.
 """

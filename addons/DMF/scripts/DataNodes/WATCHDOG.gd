@@ -8,7 +8,7 @@ class_name DMFWatchdog
 			@R3X-G1L       (godot assets store)
 			R3X-G1L6AME5H  (github)
 
-	A (child) data node used by the DMF Playlist Generator. Watchdogs look at the
+	A (child) data node used by the DMF Song. Watchdogs look at the
 	changes in properties, and applies the change to the track property e.g. control
 	volume according to the current HP.
 """

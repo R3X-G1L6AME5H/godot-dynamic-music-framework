@@ -7,7 +7,7 @@ class_name DMFTrack
 			@R3X-G1L       (godot assets store)
 			R3X-G1L6AME5H  (github)
 
-	A (child) data node used by the DMF Playlist Generator. The refference to Audio
+	A (child) data node used by the DMF Song. The refference to Audio
 	Tracks. This node is what organizes the played audio.
 """
 

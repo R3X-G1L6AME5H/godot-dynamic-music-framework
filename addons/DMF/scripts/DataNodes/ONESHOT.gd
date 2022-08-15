@@ -7,7 +7,7 @@ class_name DMFOneshot
 			@R3X-G1L       (godot assets store)
 			R3X-G1L6AME5H  (github)
 
-	A (child) data node used by the DMF Playlist Generator. This node adds a bit
+	A (child) data node used by the DMF Song. This node adds a bit
 	of randomness to the entire piece. It sets a probability of the track playing.
 	This can embelish long repeating loops.
 """

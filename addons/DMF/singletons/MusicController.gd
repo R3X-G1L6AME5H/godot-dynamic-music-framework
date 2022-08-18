@@ -7,7 +7,8 @@ extends Node
 			R3X-G1L6AME5H  (github)
 
 	THE MOST IMPORTANT SCRIPT!!! This singleton is what manages all the data, sounds,
-	and events which allow for dynamic music.
+	and events which allow for dynamic music. This script is ment to be attached to the
+	[MusicController.tscn].
 """
 
 

@@ -35,6 +35,7 @@ debug_save = true
 
 [node name="SONG" type="Node" parent="."]
 script = ExtResource( 1 )
+bpm = 140
 default_segment = "SEG_Chill"
 
 [node name="MT_HIGH_HP_MIDI" type="Node" parent="SONG"]

@@ -53,7 +53,6 @@ __meta__ = {
 
 [node name="Shoot" type="AudioStreamPlayer" parent="Enemy"]
 stream = ExtResource( 4 )
-bus = "PitchShifter"
 
 [node name="ColorRect" type="ColorRect" parent="Enemy"]
 anchor_left = 0.5
@@ -65,9 +64,6 @@ margin_top = -20.0
 margin_right = 20.0
 margin_bottom = 20.0
 color = Color( 0.878431, 0.152941, 0.376471, 1 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Timer" type="Timer" parent="Enemy"]
 one_shot = true
@@ -109,7 +105,6 @@ __meta__ = {
 
 [node name="Hit" type="AudioStreamPlayer" parent="Player"]
 stream = ExtResource( 5 )
-bus = "PitchShifter"
 
 [node name="OOB" type="Area2D" parent="."]
 visible = false
@@ -136,9 +131,6 @@ anchor_bottom = 1.0
 margin_top = 2.11893
 margin_right = 1024.0
 margin_bottom = 602.119
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="MarginContainer" type="MarginContainer" parent="GUI"]
 margin_right = 450.0
@@ -177,9 +169,6 @@ margin_right = 31.0
 margin_bottom = 22.0
 text = "HP"
 uppercase = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="HPBar" type="ProgressBar" parent="GUI/MarginContainer/HBoxContainer2/HBoxContainer"]
 margin_left = 45.0
@@ -187,9 +176,9 @@ margin_right = 323.0
 margin_bottom = 30.0
 size_flags_horizontal = 3
 size_flags_vertical = 1
+custom_colors/font_color = Color( 1, 1, 1, 1 )
 custom_styles/fg = SubResource( 4 )
 custom_styles/bg = SubResource( 5 )
-custom_colors/font_color = Color( 1, 1, 1, 1 )
 max_value = 1.0
 value = 1.0
 script = ExtResource( 2 )
@@ -210,9 +199,6 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 custom_constants/margin_right = 10
 custom_constants/margin_left = 10
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="HBoxContainer" type="HBoxContainer" parent="GUI/MarginContainer/HBoxContainer2/HBoxContainer2/Panel/MarginContainer"]
 margin_left = 10.0
@@ -283,24 +269,26 @@ margin_bottom = 225.0
 bbcode_enabled = true
 bbcode_text = "CONTROLS
 - [Arrow Keys] to move, and [Enter] to heal
+- [K] & [ J ] to decrease and increase intensity  
 
 THINGS TO NOTICE
 - Shots are in sync, and in pitch with the music
 - At 30% HP:
 	- the violins fade out & Cellos fade in
 	- the attack pattern changes
-- There is also a random chance of little motifs playing 
-  so watch out for that"
+- There is also a random chance of little motifs     playing so watch out for that
+- Intensity above 5 triggers a segment transition"
 text = "CONTROLS
 - [Arrow Keys] to move, and [Enter] to heal
+- [K] & [ J ] to decrease and increase intensity  
 
 THINGS TO NOTICE
 - Shots are in sync, and in pitch with the music
 - At 30% HP:
 	- the violins fade out & Cellos fade in
 	- the attack pattern changes
-- There is also a random chance of little motifs playing 
-  so watch out for that"
+- There is also a random chance of little motifs     playing so watch out for that
+- Intensity above 5 triggers a segment transition"
 __meta__ = {
 "_edit_use_anchors_": false
 }

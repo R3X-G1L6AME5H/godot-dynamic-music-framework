@@ -103,9 +103,53 @@ Next up is the `DMFSegment` node. This is what will be responsible for horizonta
 #### Midi's
 And then there is the `DMFMidi` node, intended to syncronize the music and the bahaviour in-game. Say, in a guitar hero like game, you could map the RED button to note C2, BLUE button to note D2, and the YELLOW button to note E2. The `MusicController` will process this midi file alongside the track file, and emit signals when a note is on, and when its off. Since the `MusicController` is a singleton, you can connect any object to it by simply writing `MusicController.connect("note_on", self, "_on_Node_note_on")`, and `MusicController.connect("note_off", self, "_on_Node_note_off")`(This assumes that you know how connecting signals works). There is no end to what you can do with this functionality.
 
+#### Pack it all together
+So let us organize all our data. 
+
+**...WIP...**
+
+
 ### Act IV - The Conductor
-* how to set up your scene(bus layout)
-* wiring up the signals
+Now that the data is organized, how to wire it up with your project? First, we require a Mixdown bus. A mixdown bus is a bus one step below the master bus. The idea is to have all the Plugin controlled sounds pass through this bus, so to leave the user space to add their own sound buses. For this plugin, that specific mixdown bus is called "Maestro". Add it to your default buses. It should send to master bus by default. The `MusicController` singleton will send sound directly to it, so make sure you have it.
+
+Now that the sound flows. How to control it?
+
+#### Blackboard
+First step of control is the Blackboard. Since a lot of modules depend on these properties, be sure to define them before starting the song. You'll get an error saying there is no property in a dictionary, otherwise.
+
+Remember that our playlist has a watchdog observing the player "HP", and the "HP_MAX". You would define it something like this:
+
+``` gdscript
+Blackboard.set("HP", 200.0)
+Blackboard.set("HP_MAX", 200.0)
+```
+In your subsequent scripts you would modify this property whenever the player heals or gets dealt damage. In a manner akin to this:
+
+``` gdscript
+## When healing (prevents HP from exceeding the MAX_HP)
+Blackboard.set("HP", min(Blackboard.get("HP") + 10, Blackboard.get("HP_MAX") ))
+## When taking damage (prevents falling below 0)
+Blackboard.set("HP", max(Blackboard.get("HP") - 10, 0))
+```
+
+#### Method calls
+The first call you will wish to make is `MusicController.get_song_list()`. This is just a preliminary check to see that all the data has been loaded. It will return null if there is no songs in the dictionary.
+
+``` gdscript
+MusicController.play( <song_name> ) ## Start/Select a song
+MusicController.pause()             ## Pause a song
+MusicController.resume()            ## Continue a paused song
+MusicController.is_playing()        ## Check if the MusicController is playing
+```
+
+Additionally, you may be able to pull of using `MusicController.seek( <position> )`, to move the positon around. I never tried it, so its up to fortuna.
+
+#### Signals
+There are boilerplate signals like `song_started`, `song_paused`, and `song_resumed` are emited at self-explainatory times. The interesting part are the `note_on`, and `note_off` signals.
+
+`note_on(channel, note)` signal sends the channel name, and the note pressed. The "channel" reffers to the name we game the midi track back when we were organizing the Playlist in the generator. The note will be a number in-between 0-127, representing its respective piano key accordingly. You can listen out for a specific note, or maybe a range of notes. You can also read out the notes's velocity by reading the `MusicController.notes_on[ <note> ]`.
+
+`note_off(channel, note)` sends a signal whenever a note is unpressed. The channel, and note behave the same as above, but with a single caveat. When the MusicController seeks another position, it tries to turn all notes off. The seek method however, does not know to what channel the notes belong to, so it returns an empty string. **If you are listening to a specific channel****, be sure to have a little patch expecting this kind of behaviour. 
 
 ## TO DO
 These are some of the things that will probably interupt my game development.

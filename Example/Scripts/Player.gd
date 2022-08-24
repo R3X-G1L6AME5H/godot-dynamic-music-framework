@@ -24,11 +24,17 @@ func get_input():
 		Blackboard.set("HP", min(Blackboard.get("HP") + 10, Blackboard.get("HP_MAX") ))
 	velocity = velocity.normalized() * speed
 	
-	if Input.is_action_just_pressed("ui_increase_intensity"):
+	if Input.is_action_just_pressed("ui_select"):
+		if MusicController.is_playing():
+			MusicController.pause()
+		else:
+			MusicController.resume()
+	
+	if Input.is_key_pressed(KEY_K):
 		Blackboard.set("INTENSITY", min(Blackboard.get("INTENSITY") - 1, Blackboard.get("INTENSITY_MAX") ))
 		get_node("../GUI/MarginContainer/HBoxContainer2/HBoxContainer2/Panel/MarginContainer/HBoxContainer/Label2").text = str(Blackboard.get("INTENSITY"))
 	
-	if Input.is_action_just_pressed("ui_decrease_intensity"):
+	if Input.is_key_pressed(KEY_L):
 		Blackboard.set("INTENSITY", min(Blackboard.get("INTENSITY") + 1, Blackboard.get("INTENSITY_MAX") ))
 		get_node("../GUI/MarginContainer/HBoxContainer2/HBoxContainer2/Panel/MarginContainer/HBoxContainer/Label2").text = str(Blackboard.get("INTENSITY"))
 

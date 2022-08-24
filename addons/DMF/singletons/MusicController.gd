@@ -21,6 +21,7 @@ export (String, FILE, "*.tres") var path_to_song_library = "res://Library.tres"
 var SONG_LIBRARY : Dictionary
 
 func _ready():
+	set_process(0)
 	### Get the playlist
 	var file = File.new()
 	file.open(path_to_song_library, File.READ)
@@ -58,7 +59,6 @@ var current_segment = ""
 var current_segment_start : float
 var current_segment_end   : float
 var watchdog_curves = []
-var is_playing = true
 
 class Player extends AudioStreamPlayer:
 	var start_time : float
@@ -78,8 +78,12 @@ const SMF = preload("res://addons/DMF/singletons/SMF.gd")
 var midi_statuses = {}
 var midi_enabled = false
 var notes_on = {}  ## Contains all pressed notes, if any
+signal song_started
+signal song_paused
+signal song_resumed
 signal note_on ( channel, note )  ## A signal emited when a note is pressed
 signal note_off( channel, note )  ## A signal emited when a note is let go
+
 
 class GodotMIDIPlayerTrackStatus:
 	var playing       : bool  = false
@@ -233,35 +237,34 @@ func _init_midi( ) -> void:
 """
 ## TODO: consider changing with _physics_process
 func _process(delta):
-	if is_playing:
-		### CHECK IF THE POSITION IS IN THE SEGMENT
-		if current_segment_end - delta * 2.0 < position:
-			## Jump to the begining of the segment if not
-			for transition in SONG_LIBRARY[current_song].segments[current_segment].transitions:
-				var tmp = float(Blackboard.get(transition.current)) / float(Blackboard.get(transition.max))
-				if transition.floor <= tmp and tmp <= transition.ceil:
-					current_segment       = transition.target
-					current_segment_start = SONG_LIBRARY[current_song]["segments"][current_segment]["start"] * bar_length
-					current_segment_end   = SONG_LIBRARY[current_song]["segments"][current_segment]["end"] * bar_length
-				
-			seek(current_segment_start)
-		
-		## KEEP TRACK OF TIME
-		position = clock.get_playback_position() + AudioServer.get_time_since_last_mix() - AudioServer.get_output_latency() + clock_offset
-		
-		_process_tracks() ## TURN PLAYERS ON/OFF
-		
-		_process_watchdogs() ## TRACK BLACKBOARD VALUES AND CHANGE TRACK PROPERTIES
-		
-		_process_oneshots(delta) ## ROLL A DICE TO SEE IF ANY ONESHOT SHOULD PLAY
-		
-		if midi_enabled: _process_midi() ## SEE IF ANY MIDI NOTES HAVE BEEN PRESSED
+	### CHECK IF THE POSITION IS IN THE SEGMENT
+	if current_segment_end - delta * 2.0 < position:
+		## Jump to the begining of the segment if not
+		for transition in SONG_LIBRARY[current_song].segments[current_segment].transitions:
+			var tmp = float(Blackboard.get(transition.current)) / float(Blackboard.get(transition.max))
+			if transition.floor <= tmp and tmp <= transition.ceil:
+				current_segment       = transition.target
+				current_segment_start = SONG_LIBRARY[current_song]["segments"][current_segment]["start"] * bar_length
+				current_segment_end   = SONG_LIBRARY[current_song]["segments"][current_segment]["end"] * bar_length
+
+		seek(current_segment_start)
+
+	## KEEP TRACK OF TIME
+	position = clock.get_playback_position() + AudioServer.get_time_since_last_mix() - AudioServer.get_output_latency() + clock_offset
+
+	_process_tracks() ## TURN PLAYERS ON/OFF
+
+	_process_watchdogs() ## TRACK BLACKBOARD VALUES AND CHANGE TRACK PROPERTIES
+
+	_process_oneshots(delta) ## ROLL A DICE TO SEE IF ANY ONESHOT SHOULD PLAY
+
+	if midi_enabled: _process_midi() ## SEE IF ANY MIDI NOTES HAVE BEEN PRESSED
 
 
 
 
 """
-	CONTROL WHEN TO TOGGLE PLAYERS.
+CONTROL WHEN TO TOGGLE PLAYERS.
 """
 func _process_tracks() -> void:
 	for player in current_players:
@@ -278,8 +281,8 @@ func _process_tracks() -> void:
 
 
 """
-	CHECK HOW THE STATS THAT THE WATCHDOGS OBSERVE CHANGE,
-	AND APPLY THE CHANGE TO A BUS PROPERTY.
+CHECK HOW THE STATS THAT THE WATCHDOGS OBSERVE CHANGE,
+AND APPLY THE CHANGE TO A BUS PROPERTY.
 """
 func _process_watchdogs() -> void:
 	## CHECK ON WATCHDOGS
@@ -313,9 +316,9 @@ func _process_oneshots( delta : float ) -> void:
 				oneshot.play()
 
 """
-	EMIT SIGNALS WHEN NOTES ARE ON/OFF, GIVEN THAT THE TRIGGERS ARE SATISFIED.
-		Note that this is practiaclly Copy/Pasted from Yui's work. I do NOT know HOW MIDI playing/reading/processing
-		works, but I ensure you that it DOES
+EMIT SIGNALS WHEN NOTES ARE ON/OFF, GIVEN THAT THE TRIGGERS ARE SATISFIED.
+	Note that this is practiaclly Copy/Pasted from Yui's work. I do NOT know HOW MIDI playing/reading/processing
+	works, but I ensure you that it DOES
 """
 func _process_midi() -> void:
 	for stat_key in  midi_statuses.keys():
@@ -429,7 +432,7 @@ func _process_midi() -> void:
 func seek( seek_time : float ):
 	### CLEAR THE SLATE
 	for note in notes_on.keys():
-		emit_signal("note_off", note)
+		emit_signal("note_off", "", note)
 	notes_on.clear()
 	
 	### RESET CLOCK AND UPDATE THE OFFSET
@@ -475,17 +478,44 @@ func _midi_seek( seek_time : float, track_status_key : String ):
 
 
 """
-	Some control functions(sorely lacking)
+	SOME CONTROL FUNCTIONS
 """
 func get_song_list():
 	if SONG_LIBRARY == null:
 		return null
 	return SONG_LIBRARY.keys()
 
-func start_song( song_name : String ) -> void:
+func play( song_name : String ) -> void:
 	current_song = song_name
+	emit_signal("song_started")
 	current_segment = SONG_LIBRARY[current_song].starting_segment
 	bar_length = (60.0 / float(SONG_LIBRARY[current_song].bpm)) * (4.0/float(SONG_LIBRARY[current_song].timesig2)) * float(SONG_LIBRARY[current_song].timesig1)
 	_init_song()
 	_init_midi()
-	is_playing = true
+	set_process(1) # Start Playing
+
+func is_playing() -> bool:
+	return is_processing()
+
+func pause() -> void:
+	if is_processing():
+		print("pausing")
+		clock_offset = position
+		clock.stop()
+		_stop_all()
+		set_process(0) # Stop Playing
+		emit_signal("song_paused")
+
+func _stop_all() -> void:
+	for pl in current_players:
+		pl.stop()
+	for os in current_oneshots:
+		os.stop()
+
+func resume() -> void:
+	if not is_processing():
+		print("resuming")
+		emit_signal("song_resumed")
+		clock.play(0)
+		seek(clock_offset)
+		set_process(1) # Continue Playing

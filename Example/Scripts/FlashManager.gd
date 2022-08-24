@@ -16,10 +16,15 @@ func _ready():
 	MusicController.connect("note_on", self, "_on_Node_note_on")
 # warning-ignore:return_value_discarded
 	MusicController.connect("note_off", self, "_on_Node_note_off")
-	##################
+# warning-ignore:return_value_discarded
+	MusicController.connect("song_started", self, "_on_song_start")
+	MusicController.play("SONG")
+	
+	get_parent().get_node("AnimationPlayer").play("EnemyMovement")
+
+func _on_song_start():
 	wholenote_length = (60.0 / MusicController.SONG_LIBRARY[MusicController.current_song].bpm) #* 4.0
 	$BulletCircle.wait_time = wholenote_length / d
-	get_parent().get_node("AnimationPlayer").play("EnemyMovement")
 
 func _on_Node_note_on(_channel, _on_note):
 	#print("++++")

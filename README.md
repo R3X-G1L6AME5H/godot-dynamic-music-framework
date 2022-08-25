@@ -43,6 +43,8 @@ Another thing that will help mask the jump is reverb. **DO NOT APPLY IT IN YOUR 
 #### Vertical Mixing
 Vertical mixing doesn't jump between tracks like horizontal mixing, but rather, it blends between them. The tracks play at the same time, but at different volumes. Imagine you were playing two recordings on two phones. One phone plays the piano part, and the other plays the violin part for the same song. If both recordings are in sync, you can mix between them by turning the volume of the phones up or down. First only the piano plays. Then you gently turn up the violin part, and now they blend into eachother. This is vertical mixing.
 
+![Variant of Vertical Mixing: Crossfade](https://manual.audacityteam.org/m/images/1/10/crossfade_tracks_effect_completed.png)
+
 So what do you need to keep track of? Firstly, you must divide the sounds playing at the same time into sections(again). We already did this for this example, remember: **Brass**, **Strings**, and **Piano**; **Strings** on high HP, and **brass** on low HP. Next, you must make them sound good. Both together, and apart. 
 
 You can get really creative with it, making one track plays the chord progression, and the other play a melody that clashes with the harmony, creating quite a dissonant sound. Curious mixture that could fade in as the monster approaches, if you were making a horror game. 
@@ -58,6 +60,8 @@ This has nothing to do with the DAW itself. Think back to games like Abzu, or Jo
 Up till this point we have only looked at ways to make the music addapt to the gameplay, but now we shall take a look at a way for the music to influence the gameplay.
 
 Imagine a piano keyboard. Say that every time the pianist presses the E4 key, there is a certain behaviour in-game. That is the idea of the event track. It is a MIDI track whose notes respond to a behaviour in-game. If it wasn't obvious, this track is inaudible. You can use it to sync events in game with the background music, if not letting the midi track completely puppeteer the enemy AI. It should ideally be only a melody, but there exists an oportunity for randomness. If you have two notes at the same time, you could make it a fifty-fifty chance for either behaviour. But if one note is louder, then the odds are stacked in it's favour. This is what we will use for the behaviour in game.
+
+![Possible use of Events: Gitar Hero](https://pixlparade.com/wp-content/uploads/2018/06/guitar-hero-licensed-soundtracks.gif)
 
 #### Exporting
 When exporting, make sure you have each track exported separately, either in **.wav**, **.ogg**, or **.mp3** format. Keep in mind that **.wav** is not compressed i.e. takes up a lot more space. Conversely, **.ogg** and **.mp3** take up less space, but they do take up extra processing for uncompressing during runtime. In general, a short sound that has to be played a lot benefits from **.wav**, like the sound of footsteps, and the longer sounds benefit from **.mp3**, or **.ogg**.

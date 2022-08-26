@@ -74,27 +74,31 @@ Music being done. Now is the time to organize the sounds in a way the plugin wil
 
 #### PlaylistGenerator & Songs
 `DMFPlaylistGenerator` is made up of many smaller nodes which simplify the organization of all the files, and settings. At the top of all the nodes is the `DMFPlaylistGenerator` node aka. the Generator. If you select it, you will see that this node has a singular property: toggle.
+
 ![Generator Screenshot](./Example/Images/Generator.png)
 
-When pressed, it will generate `res://Library.gd` file. 
+When pressed, it will generate `res://Library.tres` file for the `MusicController` Singleton to use. Below is a screenshot of `Library.gd`, which is there for debug purpuses. You can stop it from generating by unticking `Debug Save`.  
+
 ![Library Screenshot](./Example/Images/LibraryDebug.png)
 
 Second is the `DMFSong` node. This node defines all the songs available to the `MusicController`. Here you will define the song's BPM and its Time Signature. 
+
 ![Song Screenshot](./Example/Images/Song.png)
 
 The organisation of nodes should look like this: 
+
+![Scene Tree Screenshot](./Example/Images/SceneTree.png)
+
 ```
 Generator ---------(DMFPlaylistGenerator)
    \--Song -----------(DMFSong)
-      \-- Tracks -----(DMFTrack)
-      \-- Segments ---(DMFSegment)
-      \-- Transition -(DMFTransition)
-      \-- Oneshots ---(DMFOneshot)
-      \-- Watchdogs --(DMFWatchDog)
-      \-- Midi's -----(DMFMidiPlayer)
+      \-- Tracks     (TR) -------(DMFTrack)
+      \-- Segments  (SEG) -----(DMFSegment)
+      \-- Transition (TZ) --(DMFTransition)
+      \-- Oneshots   (OS) -----(DMFOneshot)
+      \-- Watchdogs  (WD) ----(DMFWatchDog)
+      \-- Midi Track (MT) --(DMFMidiPlayer)
 ```
-![Scene Tree Screenshot](./Example/Images/SceneTree.png)
-
 
 FYI: You can add as many songs as you wish, as long as the song nodes are under the generator node. Likewise you can add as many Tracks, Segments, ..., Midi's as you want, but they must always be under the Song node. Now that the structure is in place these are the nodes you'll be working with. Most of the organization is abstract, so I've provided a sketch of what is actually happening.
 
@@ -109,7 +113,7 @@ Firstly, the node you'll spend most of your time with: `DMFTrack` node. It's job
 #### Segments
 Next up is the `DMFSegment` node. This is what will be responsible for horizontal mixing. Specify FROM which TO which bar a segment will span. Be sure to use unique names for the segment nodes, because those names will be how the `MusicControler` will recognize which segment to play.
  
-![Segment Screenshot](./Example/Images/Segment.png)
+![Segment Screenshot](./Example/Images/Section.png)
 
 #### Oneshots
 `DMFOneshot` nodes have a certain chance of playing any time the song loops back to them. You only need to specify on which bar it should trigger, and what is the chance of it playing.

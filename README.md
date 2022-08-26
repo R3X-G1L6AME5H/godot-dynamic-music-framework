@@ -10,6 +10,8 @@ There is quite a bit to go through so the usage will be explained through an exa
 ### Act I - Before I forget
 Before we start, we need to figure out what we want. For this example, I wish to make a simple bullet-hell game in which attacks syncronize with music. 
 
+![Touhou Refference](http://pa1.narvii.com/6058/99cb3cff171e1a02eeea547464f1aa2cf0107887_hq.gif)
+
 So what do we need for this. What game states exist that the music will highlight. Lets start simple, low HP. Something happens to the music when player gets hurt. This implies that there is certain music playing when player is ok. Further more, since I am a lazy dev, lets make it so that when the player survives for long enough the music shifts to something more upbeat. Like a stage two of a boss fight.
 
 So that makes four states. Stage I, Stage II, Stage I low HP, and Stage II low HP. In this composition, lets have a string section and a brass section. The string section will be fast, while the brass section will be slow and grand. Idea is to make the music (and consequently the attacks) fast when Player's HP is high, and slow when Player's HP is low. And maybe we'll add a piano for some random fills to keep the music interesting.

@@ -72,21 +72,29 @@ When exporting, make sure you have each track exported separately, either in **.
 Music being done. Now is the time to organize the sounds in a way the plugin will understand. Open an empty scene, and add a `DMFPlaylistGenerator` to it. While reading this, I recommend going through `res://Example/PLAYLIST_GENERATOR.tscn` scene. All nodes explained below are used there, and correspond to the example music used here. 
 
 
-#### PlaylistGenerator
-`DMFPlaylistGenerator` is made up of many smaller nodes which simplify the organization of all the files, and settings. At the top of all the nodes is the `DMFPlaylistGenerator` node aka. the Generator. If you select it, you will see that this node has a singular property: toggle. When pressed, it will generate `res://Library.gd` file. Second is the `DMFSong` node. This node defines all the songs available to the `MusicController`. Here you will define the song's BPM and its Time Signature. 
+#### PlaylistGenerator & Songs
+`DMFPlaylistGenerator` is made up of many smaller nodes which simplify the organization of all the files, and settings. At the top of all the nodes is the `DMFPlaylistGenerator` node aka. the Generator. If you select it, you will see that this node has a singular property: toggle.
+![Generator Screenshot](./Example/Images/Generator.png)
+
+When pressed, it will generate `res://Library.gd` file. 
+![Library Screenshot](./Example/Images/LibraryDebug.png)
+
+Second is the `DMFSong` node. This node defines all the songs available to the `MusicController`. Here you will define the song's BPM and its Time Signature. 
+![Song Screenshot](./Example/Images/Song.png)
 
 The organisation of nodes should look like this: 
 ```
 Generator ---------(DMFPlaylistGenerator)
-\--Song -----------(DMFSong)
-   \-- Tracks -----(DMFTrack)
-   \-- Segments ---(DMFSegment)
-   \-- Transition -(DMFTransition)
-   \-- Oneshots ---(DMFOneshot)
-   \-- Watchdogs --(DMFWatchDog)
-   \-- Midi's -----(DMFMidiPlayer)
-   
+   \--Song -----------(DMFSong)
+      \-- Tracks -----(DMFTrack)
+      \-- Segments ---(DMFSegment)
+      \-- Transition -(DMFTransition)
+      \-- Oneshots ---(DMFOneshot)
+      \-- Watchdogs --(DMFWatchDog)
+      \-- Midi's -----(DMFMidiPlayer)
 ```
+![Scene Tree Screenshot](./Example/Images/SceneTree.png)
+
 
 FYI: You can add as many songs as you wish, as long as the song nodes are under the generator node. Likewise you can add as many Tracks, Segments, ..., Midi's as you want, but they must always be under the Song node. Now that the structure is in place these are the nodes you'll be working with. Most of the organization is abstract, so I've provided a sketch of what is actually happening.
 
@@ -95,17 +103,28 @@ FYI: You can add as many songs as you wish, as long as the song nodes are under 
 #### Tracks
 Firstly, the node you'll spend most of your time with: `DMFTrack` node. It's job is to play a sound file; simple as. The only thing you need to figure out is what bar it should start at, and how many bars it should last for. You can look back at your DAW to see what these values will be. 
 
+
+![Track Screenshot](./Example/Images/Track.png)
+
 #### Segments
 Next up is the `DMFSegment` node. This is what will be responsible for horizontal mixing. Specify FROM which TO which bar a segment will span. Be sure to use unique names for the segment nodes, because those names will be how the `MusicControler` will recognize which segment to play.
  
+![Segment Screenshot](./Example/Images/Segment.png)
+
 #### Oneshots
 `DMFOneshot` nodes have a certain chance of playing any time the song loops back to them. You only need to specify on which bar it should trigger, and what is the chance of it playing.
+
+![Oneshot Screenshot](./Example/Images/Oneshot.png)
 
 #### Watchdogs
 `DMFWatchdog` is where things get crazy. The gist of it is: you select a track, one of ITS properties, one of the WORLD's properties, WORLD property's max value, and a graph of how it should respond. Imagine it this way: The game starts and you have this piano track playing. The player gets hit, and the health drops bellow 50%. Along with it, the piano gets quieter, and a violin fades in. How? Watchdogs. You start with two tracks: the piano and the violin. Then you make two watchdogs. You make one watchdog target the piano track, and the other one target the violin track. You tell them their `Current Property` is "PlayerHP", and that the `Property Max` is "PlayerHPMax"(both of which must be available in the Blackboard), and to `Change Property` Volume. Lastly, you create the new curves for the `Change Graph`. One whose value is high above 50%, and one whose value is high BELOW 50%. That is how you get the example above. 
 
+![Watchdog Screenshot](./Example/Images/Watchdog.png)
+
 #### Midi's
 And then there is the `DMFMidi` node, intended to syncronize the music and the bahaviour in-game. Say, in a guitar hero like game, you could map the RED button to note C2, BLUE button to note D2, and the YELLOW button to note E2. The `MusicController` will process this midi file alongside the track file, and emit signals when a note is on, and when its off. Since the `MusicController` is a singleton, you can connect any object to it by simply writing `MusicController.connect("note_on", self, "_on_Node_note_on")`, and `MusicController.connect("note_off", self, "_on_Node_note_off")`(This assumes that you know how connecting signals works). There is no end to what you can do with this functionality.
+
+![Midi Screenshot](./Example/Images/Midi.png)
 
 #### Pack it all together
 So let us organize all our data. 
